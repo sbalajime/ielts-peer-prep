@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+input{
+  display: block;
+}
+
+select{
+  display: block;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +43,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.loginBlock{
+
+  margin: 1px;
+  padding: 10px;
+  border: solid  2px  #000 ;
+  border-radius: 10px;
+  width: 200px;
+  
+ 
+  
+
+
 }
