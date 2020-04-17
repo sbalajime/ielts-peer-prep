@@ -1,6 +1,4 @@
-.App {
-  text-align: center;
-}
+
 
 input{
   display: block;
@@ -30,7 +28,7 @@ select{
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} 
 
 .App-link {
   color: #61dafb;
@@ -46,16 +44,69 @@ select{
 }
 
 
-.loginBlock{
+
+
+.signBlock{
 
   margin: 1px;
   padding: 10px;
   border: solid  2px  #000 ;
   border-radius: 10px;
+  width: 400px;
+}
+
+
+.signHeader h3 {
+margin-left:15px ;
+}
+
+
+.signEmail{ 
+  padding: 10px;
+}  
+
+.signEmail  input {
   width: 200px;
-  
- 
-  
+  height: 25px;
+  font-size: medium;
+}
+
+.signPass{  
+  padding: 10px;
+}  
+
+.signPass input{
+  width: 200px;
+  height: 25px;
+  font-size: medium;
+}
 
 
+.signBatch{
+  padding: 10px;
+}
+
+.signBatch select{
+  width:200px;
+  height: 25px;
+  font-size: medium;
+}
+
+.signButton{
+  padding: 10px;
+}
+
+.signButton input{
+  width: 100px;
+  height: 50px;
+  background-color: #fff;
+  color: #000;
+  font-size: medium;
+
+}
+
+.signButton input:hover{
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
 }
