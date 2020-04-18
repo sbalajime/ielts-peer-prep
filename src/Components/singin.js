@@ -1,5 +1,8 @@
 import  React , {Component} from 'react'
 import '../App.css'
+import {Link} from 'react-router-dom'
+import Homeimg from './homeimg'
+
 
 class Signin extends Component{
 
@@ -20,11 +23,18 @@ class Signin extends Component{
 
         const {email , pass } = this.state
     return(
-        
+        <div>
+        <Homeimg/>
+
         <div className ="signBlock">
+            
+
             <div className="signHeader">
             <h3>Sign In</h3>
             </div>
+            
+         
+
             <div className="signEmail">
             <input  type = "text" onChange={this.givenValue} placeholder ="E-mail" name="email" value={email} />
             </div>
@@ -34,6 +44,10 @@ class Signin extends Component{
             <div className="signButton">
             <input type="button" value="Sign In" />
             </div>    
+            <button className = "nav"> 
+            <Link to="/signup">Sign Up</Link>
+            </button>
+        </div>
         </div>
     )
     }
