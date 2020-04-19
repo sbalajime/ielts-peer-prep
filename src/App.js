@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Signup from './Components/signup';
+import Signup from './Components/Register';
 import Login from './Components/LogIn'
 import { Link, BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import 'typeface-roboto';
