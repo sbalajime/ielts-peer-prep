@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom'
@@ -17,6 +18,13 @@ const useStyles = (theme) => ({
             width: '40ch',
             height: '40px'
         },
+        [theme.breakpoints.down('md')]: {
+            '& > *': {
+                margin: theme.spacing(1),
+                width: '30ch',
+                height: '40px'
+            }
+        },
     },
     button: {
         width: 'auto', textAlign: 'center', marginTop: 20
@@ -28,44 +36,52 @@ class Signup extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", pass: "", rpass: "", batch: "" }
+        this.state = { email: "", password: "", rpass: "", batch: "" }
     }
 
     handleChange = (e) => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
+        const { id, value } = e.target
+        this.setState({ [id]: value })
     }
 
     render() {
 
-        const { email, pass, rpass } = this.state;
+        const { email, password, rpass } = this.state;
         const { classes } = this.props;
+        console.log('email', email, 'pass', password, 'rpass', rpass)
 
         return (
-            <Box display="flex" bgcolor="background.paper">
-                <Homeimg />
-                <Box height="auto" my="auto" width="30vw" mr={4}>
-                    <Paper elevation={3} >
-                        <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
-                            <Typography variant="h4" gutterBottom>
-                                Sign Up
+            <Box display="flex">
+                <Grid container spacing={0} alignItems="center"
+                    justify="center"
+                    style={{ minHeight: "100vh" }}>
+                    <Grid item lg={8} md={6} sm={4} xs={1}>
+                        <div />
+                    </Grid>
+                    <Grid item lg={4} md={6} sm={8} xs={11} >
+                        <Box height="auto" my="auto" mr={4}>
+                            <Paper elevation={3} >
+                                <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
+                                    <Typography variant="h4" gutterBottom>
+                                        SignUp
                             </Typography>
-                            <form className={classes.root} noValidate autoComplete="off">
-                                <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
-                                <TextField id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
-                                <TextField id="confirm_password" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
-                                <Button variant="contained" color="primary" classes={{ root: classes.button }}>Sign Up</Button>
-
-                            </form>
-                            <Link to="/login" style={{ textDecoration: 'none' }}>
-                                <Typography >
-                                    Already have an account?
+                                    <form className={classes.root} noValidate autoComplete="off">
+                                        <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
+                                        <TextField id="password" label="Password" variant="outlined" size="small" value={password} onChange={this.handleChange} />
+                                        <TextField id="rpass" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
+                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }}>Login</Button></div>
+                                    </form>
+                                    <Link to="/login" style={{ textDecoration: 'none', marginTop: 20 }}>
+                                        <Typography>
+                                            Already have an account
                                 </Typography>
-                            </Link>
+                                    </Link>
+                                </Box>
+                            </Paper>
                         </Box>
-                    </Paper>
-                </Box>
-            </Box>
+                    </Grid>
+                </Grid>
+            </Box >
         )
     }
 }

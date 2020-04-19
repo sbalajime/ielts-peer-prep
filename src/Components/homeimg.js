@@ -6,7 +6,7 @@ function Homeimg() {
 
     return (
         <img className="homeImg" src={home} alt="pic" style={{
-            minWidth: '70vw', objectFit: 'contain', marginTop: 50
+            objectFit: 'contain', marginTop: 50
         }} />
     )
 
