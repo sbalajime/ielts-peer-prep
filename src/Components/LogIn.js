@@ -64,7 +64,7 @@ class Login extends React.Component {
                                     <form className={classes.root} noValidate autoComplete="off">
                                         <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
                                         <TextField id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
-                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }}>Login</Button></div>
+                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => this.props.history.push('/write')}>Login</Button></div>
                                     </form>
                                     <Link to="/signup" style={{ textDecoration: 'none' }}>
                                         <Typography>
