@@ -58,20 +58,9 @@ select{
 }
 
 
-.signHeader h3 {
-margin-left:15px ;
-}
 
 
-.signEmail{ 
-  padding: 10px;
-}  
 
-.signEmail  input {
-  width: 200px;
-  height: 25px;
-  font-size: medium;
-}
 
 .signPass{  
   padding: 10px;

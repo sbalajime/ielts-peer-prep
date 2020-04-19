@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 
 const useStyles = (theme) => ({
@@ -24,7 +24,7 @@ const useStyles = (theme) => ({
 });
 
 
-class Signup extends React.Component {
+class Login extends React.Component {
 
     constructor() {
         super()
@@ -48,18 +48,16 @@ class Signup extends React.Component {
                     <Paper elevation={3} >
                         <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
                             <Typography variant="h4" gutterBottom>
-                                Sign Up
+                                Login
                             </Typography>
                             <form className={classes.root} noValidate autoComplete="off">
                                 <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
                                 <TextField id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
-                                <TextField id="confirm_password" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
-                                <Button variant="contained" color="primary" classes={{ root: classes.button }}>Sign Up</Button>
-
+                                <Button variant="contained" color="primary" classes={{ root: classes.button }}>Login</Button>
                             </form>
-                            <Link to="/login" style={{ textDecoration: 'none' }}>
-                                <Typography >
-                                    Already have an account?
+                            <Link to="/signup" style={{ textDecoration: 'none' }}>
+                                <Typography>
+                                    Create a new account
                                 </Typography>
                             </Link>
                         </Box>
@@ -71,4 +69,4 @@ class Signup extends React.Component {
 }
 
 
-export default withStyles(useStyles)(Signup)
+export default withStyles(useStyles)(Login)

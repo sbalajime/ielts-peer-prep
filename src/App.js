@@ -1,15 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Signup from './Components/signup';
-import Signin from './Components/singin'
+import Signup from './Components/SignUp';
+import Login from './Components/LogIn'
 import { Link, BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import 'typeface-roboto';
 
 
-const appp = () => {
-  let a = 1
-  let b = 3
-}
 function App() {
   return (
     <Router>
@@ -19,7 +16,10 @@ function App() {
             <Signup />
           </Route>
           <Route path="/" >
-            <Signin />
+            <Login />
+          </Route>
+          <Route path="/login" >
+            <Login />
           </Route>
         </Switch>
 
