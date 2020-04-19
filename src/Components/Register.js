@@ -1,6 +1,5 @@
 import React from 'react';
 import '../App.css'
-import Homeimg from './HomeImg.js'
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
