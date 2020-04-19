@@ -48,7 +48,6 @@ class Signup extends React.Component {
 
         const { email, password, rpass } = this.state;
         const { classes } = this.props;
-        console.log('email', email, 'pass', password, 'rpass', rpass)
 
         return (
             <Box display="flex">
