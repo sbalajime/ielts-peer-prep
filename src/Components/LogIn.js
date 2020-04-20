@@ -29,21 +29,41 @@ const useStyles = (theme) => ({
 });
 
 
+
+
 class Login extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", pass: "", rpass: "", batch: "" }
+        this.state = { email: "", password: "" }
     }
 
     handleChange = (e) => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
+        const { id, value } = e.target
+        this.setState({ [id]: value })
+    }
+
+    handleClick = () => {
+        const { email, password } = this.state
+        fetch(`http://localhost:5000/user/login`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        }).then(res => res.json())
+            .then(result => {
+                {
+                    console.log(result)
+                    this.setState({ email: "", password: "" })
+                    //this.props.history.push('/write')
+                }
+            })
     }
 
     render() {
 
-        const { email, pass, rpass } = this.state;
+        const { email, pass } = this.state;
         const { classes } = this.props;
         let a = 0;
         return (
@@ -62,9 +82,9 @@ class Login extends React.Component {
                                         Login
                             </Typography>
                                     <form className={classes.root} noValidate autoComplete="off">
-                                        <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
-                                        <TextField id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
-                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => this.props.history.push('/write')}>Login</Button></div>
+                                        <TextField type="email" id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
+                                        <TextField type="password" id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
+                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Login</Button></div>
                                     </form>
                                     <Link to="/signup" style={{ textDecoration: 'none' }}>
                                         <Typography>

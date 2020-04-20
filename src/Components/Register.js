@@ -35,7 +35,7 @@ class Signup extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "", rpass: "", batch: "" }
+        this.state = { email: "", password: "", rpass: "", fullName: "" }
     }
 
     handleChange = (e) => {
@@ -43,9 +43,26 @@ class Signup extends React.Component {
         this.setState({ [id]: value })
     }
 
+    handleClick = () => {
+        console.log("test")
+        const { email, password, rpass, fullName } = this.state
+        if (password === rpass) {
+            fetch(`http://localhost:5000/user/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, fullName })
+            }).then(res => res.json())
+                .then(result => {
+                    console.log(result)
+                    this.setState({ email: "", rpass: "", password: "", fullName: "" })
+                })
+        }
+    }
+
+
     render() {
 
-        const { email, password, rpass } = this.state;
+        const { email, password, rpass, fullName } = this.state;
         const { classes } = this.props;
 
         return (
@@ -64,10 +81,11 @@ class Signup extends React.Component {
                                         SignUp
                             </Typography>
                                     <form className={classes.root} noValidate autoComplete="off">
-                                        <TextField id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
-                                        <TextField id="password" label="Password" variant="outlined" size="small" value={password} onChange={this.handleChange} />
-                                        <TextField id="rpass" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
-                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }}>Login</Button></div>
+                                        <TextField type="text" id="fullName" label="Name" variant="outlined" size="small" value={fullName} onChange={this.handleChange} />
+                                        <TextField type="email" id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
+                                        <TextField type="password" id="password" label="Password" variant="outlined" size="small" value={password} onChange={this.handleChange} />
+                                        <TextField type="password" id="rpass" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
+                                        <div style={{ marginTop: 20, width: '100%' }}><Button onClick={this.handleClick} variant="contained" color="primary" classes={{ root: classes.button }}>Signup</Button></div>
                                     </form>
                                     <Link to="/login" style={{ textDecoration: 'none', marginTop: 20 }}>
                                         <Typography>
