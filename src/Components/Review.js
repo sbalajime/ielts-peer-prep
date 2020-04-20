@@ -40,7 +40,7 @@ class Review extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
         return (
-            <Box bgcolor="primary.main" display="flex" flex="1" height="100vh">
+            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" >
                 <Card className={classes.root}>
                     <CardContent>
                         <Typography variant="h5" component="h2" gutterBottom>
