@@ -4,6 +4,7 @@ import './App.css';
 import Signup from './Components/Register';
 import Login from './Components/LogIn';
 import Essay from './Components/Essay';
+import Review from './Components/Review';
 import { Link, BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import 'typeface-roboto';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" exact render={props => <Login {...props} />} />
           <Route path="/login" exact render={props => <Login {...props} />} />
           <Route path="/write" exact render={props => <Essay {...props} />} />
+          <Route path="/review" exact render={props => <Review {...props} />} />
         </Switch>
 
       </div>
