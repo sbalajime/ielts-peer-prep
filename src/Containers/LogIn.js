@@ -68,9 +68,7 @@ class Login extends React.Component {
         if (reason === 'clickaway') {
             return;
         }
-
         this.setState({ apiError: false, apiErrMessage: '' });
-
     }
 
     handleClick = () => {
@@ -111,8 +109,6 @@ class Login extends React.Component {
                                         <TextField type="email" id="email" label="Email" variant="outlined" helperText={emailError ? "Please enter a valid email" : ""} error={emailError} size="small" value={email} onChange={this.handleChange} />
                                         <TextField type="password" id="password" label="Password" variant="outlined" helperText={passError ? "Please enter a password" : ""} error={passError} size="small" value={password} onChange={this.handleChange} />
                                         <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Login</Button></div>
-                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => { this.props.history.push('/write') }}>Write</Button></div>
-                                        <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => { this.props.history.push('/review') }}>Review</Button></div>
                                     </form>
                                     <Link to="/signup" style={{ textDecoration: 'none' }}>
                                         <Typography>

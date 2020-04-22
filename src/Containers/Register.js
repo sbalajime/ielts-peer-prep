@@ -8,8 +8,10 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-
+import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api';
+
+import SnackBar from '../Components/SnackBar';
 
 
 const useStyles = (theme) => ({
@@ -17,7 +19,7 @@ const useStyles = (theme) => ({
         '& > *': {
             margin: theme.spacing(1),
             width: '40ch',
-            height: '40px'
+            height: '60px'
         },
         [theme.breakpoints.down('md')]: {
             '& > *': {
@@ -37,7 +39,7 @@ class Signup extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "", rpass: "", fullName: "" }
+        this.state = { email: "", password: "", rpass: "", fullName: "", error: {}, apiError: false, apiErrMessage: '' }
     }
 
     handleChange = (e) => {
@@ -45,17 +47,46 @@ class Signup extends React.Component {
         this.setState({ [id]: value })
     }
 
-    handleSignupResp = (result) => {
-        this.setState({ email: "", rpass: "", password: "", fullName: "" })
-        if (result.data) {
-            localStorage.setItem('token', result.data);
-            this.setState({ email: "", password: "" });
-            this.props.history.push('/')
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
         }
+        this.setState({ apiError: false, apiErrMessage: '' });
     }
+
+    handleSignupResp = (resp) => {
+        if (resp.status == 'success') {
+            const { data } = resp;
+            if (data) {
+                localStorage.setItem('token', data);
+                this.setState({ email: "", password: "" });
+                this.props.history.push('/')
+            }
+        } else {
+            this.setState({ apiError: true, apiErrMessage: resp.msg })
+        }
+
+    }
+
     handleClick = () => {
-        const { email, password, rpass, fullName } = this.state
-        if (password === rpass) {
+        let { email, password, rpass, fullName, error } = this.state;
+        email = email.trim();
+        password = password.trim();
+        rpass = rpass.trim();
+        fullName = fullName.trim();
+        let isValidEmail = email.trim() && CONSTANTS.EMAIL_REGEX.test(email);
+        if (!isValidEmail && !password.trim() && !rpass.trim()) {
+            this.setState({ error: { password: true, email: true, rpass: true } });
+        } else if (!isValidEmail) {
+            this.setState({ error: { email: true } })
+        } else if (!password.trim()) {
+            this.setState({ error: { ...error, email: false, password: true } });
+        } else if (password !== rpass) {
+            this.setState({ error: { ...error, email: false, password: false, rpass: true } });
+        } else if (!fullName) {
+            this.setState({ error: { email: false, password: false, rpass: false, fullName: true } });
+        } else {
+            this.setState({ error: {} })
             postData(`http://localhost:5000/user/`, { email, password, fullName }, this.handleSignupResp);
         }
     }
@@ -63,7 +94,7 @@ class Signup extends React.Component {
 
     render() {
 
-        const { email, password, rpass, fullName } = this.state;
+        const { email, password, rpass, apiErrMessage, apiError, fullName, error: { email: errEmail, password: errPassword, rpass: errRpass, fullName: errFullName } } = this.state;
         const { classes } = this.props;
 
         return (
@@ -82,10 +113,10 @@ class Signup extends React.Component {
                                         SignUp
                             </Typography>
                                     <form className={classes.root} noValidate autoComplete="off">
-                                        <TextField type="text" id="fullName" label="Name" variant="outlined" size="small" value={fullName} onChange={this.handleChange} />
-                                        <TextField type="email" id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
-                                        <TextField type="password" id="password" label="Password" variant="outlined" size="small" value={password} onChange={this.handleChange} />
-                                        <TextField type="password" id="rpass" label="Confirm Password" variant="outlined" size="small" value={rpass} onChange={this.handleChange} />
+                                        <TextField type="text" id="fullName" label="Name" variant="outlined" size="small" error={errFullName} helperText={errFullName ? "Enter Full Name" : ""} value={fullName} onChange={this.handleChange} />
+                                        <TextField type="email" id="email" label="Email" variant="outlined" size="small" error={errEmail} helperText={errEmail ? "Enter email" : ""} value={email} onChange={this.handleChange} />
+                                        <TextField type="password" id="password" label="Password" variant="outlined" size="small" error={errPassword} helperText={errPassword ? "Enter Password" : ""} value={password} onChange={this.handleChange} />
+                                        <TextField type="password" id="rpass" label="Confirm Password" variant="outlined" size="small" error={errRpass} helperText={errRpass ? "Enter the same password as above" : ""} value={rpass} onChange={this.handleChange} />
                                         <div style={{ marginTop: 20, width: '100%' }}><Button onClick={this.handleClick} variant="contained" color="primary" classes={{ root: classes.button }}>Signup</Button></div>
                                     </form>
                                     <Link to="/login" style={{ textDecoration: 'none', marginTop: 20 }}>
@@ -98,6 +129,7 @@ class Signup extends React.Component {
                         </Box>
                     </Grid>
                 </Grid>
+                <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
             </Box >
         )
     }
