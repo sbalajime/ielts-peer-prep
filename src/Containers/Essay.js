@@ -3,20 +3,39 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import TimerOutlinedIcon from '@material-ui/icons/TimerOutlined';
 
+
+import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
+
+
 
 const useStyles = (theme) => ({
     root: {
         '& > *': {
+            margin: theme.spacing(2)
+        }
+    },
+    card: {
+        width: '100%',
+        margin: theme.spacing(3),
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(1)
+        }
+    }, form: {
+        margin: theme.spacing(2),
+        [theme.breakpoints.down('sm')]: {
             margin: theme.spacing(1)
         }
     },
     button: {
         width: 'auto', textAlign: 'center'
+    },
+    taskSelector: {
+        width: 200
     }
 });
 
@@ -34,20 +53,24 @@ class Essay extends Component {
                 minutes: '00',
                 seconds: '00'
             },
-            currentWords: 0
+            currentWords: 0,
+            task: '',
+            startTimer: false
         }
     }
 
 
     componentDidUpdate(prevProps, prevState) {
-        const { task } = this.state;
+        const { task, startTimer } = this.state;
         if (prevState.remSeconds === 0) {
             clearInterval(this.durInterval);
         }
-        if (task !== prevState.task) {
+        if (startTimer && (startTimer !== prevState.startTimer)) {
             if (task == 'task_1') {
+                clearInterval(this.durInterval);
                 this.setState({ minimumWords: CONSTANTS.TASK_1_MINIMUM_WORDS, duration: CONSTANTS.TASK_1_DURATION, remSeconds: CONSTANTS.TASK_1_DURATION }, this.initiateTimer)
             } else {
+                clearInterval(this.durInterval);
                 this.setState({ minimumWords: CONSTANTS.TASK_2_MINIMUM_WORDS, duration: CONSTANTS.TASK_2_DURATION, remSeconds: CONSTANTS.TASK_2_DURATION }, this.initiateTimer)
             }
 
@@ -71,59 +94,55 @@ class Essay extends Component {
         }
         this.setState({ [input]: value, currentWords })
     }
+
+    handleSelectChange = (e) => {
+        this.setState({ task: e.target.value })
+    }
     render() {
         const { classes } = this.props;
-        const { minimumWords, duration, timer, currentWords, answer } = this.state;
+        const { minimumWords, duration, timer, currentWords, answer, task, startTimer } = this.state;
+        console.log('task', task)
         return (
-            <Paper elevation={3} >
-                <Box margin={3} >
-                    <Select
-                        native
-                        value={this.state.task}
-                        onChange={(e) => this.handleChange('task', e.target.value)}
-                        label="Age"
-                        inputProps={{
-                            name: 'age',
-                            id: 'outlined-age-native-simple'
-                        }}
-                    >
-                        <option aria-label="None" value="" />
-                        <option value='task_1'>Task 1</option>
-                        <option value='task_2'>Task 2</option>
-                    </Select>
-                    <div>
+            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" >
+                <Paper elevation={3} className={classes.card}>
+                    <Box margin={3} className={classes.form}>
+                        <Dropdown value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
+                        <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
+                            <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
+                            <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
+                        </Box>
+                        <TextField
+                            id="outlined-multiline-static"
+                            label="Question"
+                            multiline
+                            rows={5}
+                            value={this.state.question}
+                            onChange={(e) => this.handleChange('question', e.target.value)}
+                            variant="outlined"
+                            fullWidth={true}
+                            inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                            margin="normal"
+                        />
+                        {startTimer ?
+                            <div>
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    label="Answer"
+                                    multiline
+                                    rows={20}
+                                    value={this.state.answer}
+                                    onChange={(e) => this.handleChange('answer', e.target.value)}
+                                    variant="outlined"
+                                    fullWidth={true}
+                                    inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                    margin="normal"
+                                />
+                                <div style={{ textAlign: 'right' }}><Button variant="contained" color="primary" size="large">Submit</Button></div>
+                            </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })}>Start Timer</Button></div>}
 
-                        <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
-                        <Chip label={`Duration: ${timer.minutes}:${timer.seconds}`} color="primary" />
-
-                    </div>
-                    <TextField
-                        id="outlined-multiline-static"
-                        label="Question"
-                        multiline
-                        rows={5}
-                        value={this.state.question}
-                        onChange={(e) => this.handleChange('question', e.target.value)}
-                        variant="outlined"
-                        fullWidth={true}
-                        inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                        margin="normal"
-                    />
-                    <TextField
-                        id="outlined-multiline-static"
-                        label="Answer"
-                        multiline
-                        rows={20}
-                        value={this.state.answer}
-                        onChange={(e) => this.handleChange('answer', e.target.value)}
-                        variant="outlined"
-                        fullWidth={true}
-                        inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                        margin="normal"
-                    />
-                    <div style={{ textAlign: 'right' }}><Button variant="contained" color="primary" size="large">Submit</Button></div>
-                </Box>
-            </Paper>)
+                    </Box>
+                </Paper>
+            </Box >)
     }
 }
 
