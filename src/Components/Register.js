@@ -7,7 +7,9 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+
+import { postData } from '../Utils/Api';
 
 
 const useStyles = (theme) => ({
@@ -43,19 +45,18 @@ class Signup extends React.Component {
         this.setState({ [id]: value })
     }
 
+    handleSignupResp = (result) => {
+        this.setState({ email: "", rpass: "", password: "", fullName: "" })
+        if (result.data) {
+            localStorage.setItem('token', result.data);
+            this.setState({ email: "", password: "" });
+            this.props.history.push('/')
+        }
+    }
     handleClick = () => {
-        console.log("test")
         const { email, password, rpass, fullName } = this.state
         if (password === rpass) {
-            fetch(`http://localhost:5000/user/`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password, fullName })
-            }).then(res => res.json())
-                .then(result => {
-                    console.log(result)
-                    this.setState({ email: "", rpass: "", password: "", fullName: "" })
-                })
+            postData(`http://localhost:5000/user/`, { email, password, fullName }, this.handleSignupResp);
         }
     }
 

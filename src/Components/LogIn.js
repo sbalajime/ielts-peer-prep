@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
+import { putData } from '../Utils/Api';
+
 const useStyles = (theme) => ({
     root: {
         '& > *': {
@@ -43,24 +45,17 @@ class Login extends React.Component {
         this.setState({ [id]: value })
     }
 
+    handleLoginResp = (result) => {
+        console.log(result)
+        if (result.data) {
+            localStorage.setItem('token', result.data);
+            this.setState({ email: "", password: "" });
+            this.props.history.push('/')
+        }
+    }
     handleClick = () => {
         const { email, password } = this.state
-        fetch(`http://localhost:5000/user/login`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
-        }).then(res => res.json())
-            .then(result => {
-                {
-                    console.log(result)
-                    localStorage.setItem('token', result.data);
-                    this.setState({ email: "", password: "" });
-                    this.props.history.push('/')
-                    //this.props.history.push('/write')
-                }
-            })
+        putData(`http://localhost:5000/user/login`, { email, password }, this.handleLoginResp);
     }
 
     render() {
