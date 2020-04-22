@@ -18,7 +18,7 @@ function App() {
           <Route path="/signup" render={props => <Signup {...props} />} />
           <Route path="/" exact render={props => protectedRoute(Dashboard, props)} />
           <Route path="/login" exact render={props => <Login {...props} />} />
-          <Route path="/write" exact render={props => protectedRoute(Essay, props)} />
+          <Route path="/write" exact render={props => <Essay {...props} />} />
           <Route path="/review" exact render={props => protectedRoute(Review, props)} />
         </Switch>
 
