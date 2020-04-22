@@ -7,6 +7,7 @@ export const putData = (url, body, callback) => {
         body: JSON.stringify(body)
     }).then(res => res.json())
         .then(result => callback(result))
+        .catch(err => callback(err))
 }
 
 
@@ -19,4 +20,5 @@ export const postData = (url, body, callback) => {
         body: JSON.stringify(body)
     }).then(res => res.json())
         .then(result => callback(result))
+        .catch(err => callback(err))
 }

@@ -1,11 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Signup from './Components/Register';
-import Login from './Components/LogIn';
-import Essay from './Components/Essay';
-import Review from './Components/Review';
-import Dashboard from './Components/Dashboard';
+import Signup from './Containers/Register';
+import Login from './Containers/LogIn';
+import Essay from './Containers/Essay';
+import Review from './Containers/Review';
+import Dashboard from './Containers/Dashboard';
 import { Link, BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import 'typeface-roboto';
 

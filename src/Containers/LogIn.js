@@ -9,14 +9,19 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
+import CONSTANTS from '../constants';
 import { putData } from '../Utils/Api';
+import SnackBar from '../Components/SnackBar';
+
+
+
 
 const useStyles = (theme) => ({
     root: {
         '& > *': {
             margin: theme.spacing(1),
             width: '40ch',
-            height: '40px'
+            height: '60px'
         }, [theme.breakpoints.down('md')]: {
             '& > *': {
                 margin: theme.spacing(1),
@@ -37,32 +42,56 @@ class Login extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "" }
+        this.state = { email: "", password: "", error: {}, apiError: false, apiErrMessage: '' }
     }
 
     handleChange = (e) => {
         const { id, value } = e.target
-        this.setState({ [id]: value })
+        this.setState({ [id]: value, error: { [id]: false } })
     }
 
-    handleLoginResp = (result) => {
-        console.log(result)
-        if (result.data) {
-            localStorage.setItem('token', result.data);
-            this.setState({ email: "", password: "" });
-            this.props.history.push('/')
+    handleLoginResp = (resp) => {
+        if (resp.status == 'success') {
+            const { data } = resp;
+            if (data) {
+                localStorage.setItem('token', data);
+                this.setState({ email: "", password: "" });
+                this.props.history.push('/')
+            }
+        } else {
+            this.setState({ apiError: true, apiErrMessage: resp.msg })
         }
+
     }
+
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ apiError: false, apiErrMessage: '' });
+
+    }
+
     handleClick = () => {
-        const { email, password } = this.state
-        putData(`http://localhost:5000/user/login`, { email, password }, this.handleLoginResp);
+        const { email, password, error } = this.state;
+        let isValidEmail = email.trim() && CONSTANTS.EMAIL_REGEX.test(email);
+        if (!isValidEmail && !password.trim()) {
+            this.setState({ error: { password: true, email: true } });
+        } else if (!isValidEmail) {
+            this.setState({ error: { email: true } })
+        } else if (!password.trim()) {
+            this.setState({ error: { ...error, password: true } });
+        } else {
+            putData(`http://localhost:5000/user/login`, { email, password }, this.handleLoginResp);
+        }
     }
 
     render() {
 
-        const { email, pass } = this.state;
+        const { email, password, error: { email: emailError, password: passError }, apiError, apiErrMessage } = this.state;
         const { classes } = this.props;
-        let a = 0;
+        console.log(this.state)
         return (
             <Box display="flex">
                 <Grid container spacing={0} alignItems="center"
@@ -77,10 +106,10 @@ class Login extends React.Component {
                                 <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
                                     <Typography variant="h4" gutterBottom>
                                         Login
-                            </Typography>
+                                    </Typography>
                                     <form className={classes.root} noValidate autoComplete="off">
-                                        <TextField type="email" id="email" label="Email" variant="outlined" size="small" value={email} onChange={this.handleChange} />
-                                        <TextField type="password" id="password" label="Password" variant="outlined" size="small" value={pass} onChange={this.handleChange} />
+                                        <TextField type="email" id="email" label="Email" variant="outlined" helperText={emailError ? "Please enter a valid email" : ""} error={emailError} size="small" value={email} onChange={this.handleChange} />
+                                        <TextField type="password" id="password" label="Password" variant="outlined" helperText={passError ? "Please enter a password" : ""} error={passError} size="small" value={password} onChange={this.handleChange} />
                                         <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Login</Button></div>
                                         <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => { this.props.history.push('/write') }}>Write</Button></div>
                                         <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => { this.props.history.push('/review') }}>Review</Button></div>
@@ -88,8 +117,9 @@ class Login extends React.Component {
                                     <Link to="/signup" style={{ textDecoration: 'none' }}>
                                         <Typography>
                                             Create a new account
-                                </Typography>
+                                        </Typography>
                                     </Link>
+                                    <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
                                 </Box>
                             </Paper>
                         </Box>
