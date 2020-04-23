@@ -10,6 +10,7 @@ import TimerOutlinedIcon from '@material-ui/icons/TimerOutlined';
 
 import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
+import { postData } from '../Utils/Api'
 
 
 
@@ -38,6 +39,8 @@ const useStyles = (theme) => ({
         width: 200
     }
 });
+
+
 
 class Essay extends Component {
     constructor(props) {
@@ -95,13 +98,24 @@ class Essay extends Component {
         this.setState({ [input]: value, currentWords })
     }
 
+    afterPost = (result) => {
+        this.setState({ question: "", answer: "", task: "" })
+        window.alert(`Thank you`)
+        console.log(result)
+    }
+
+    handleClick = () => {
+        const { answer, question, task } = this.state
+        const body = { essay: answer, user: 6, task, question }
+        postData(`http://localhost:5000/essay`, body, this.afterPost)
+    }
+
     handleSelectChange = (e) => {
         this.setState({ task: e.target.value })
     }
     render() {
         const { classes } = this.props;
         const { minimumWords, duration, timer, currentWords, answer, task, startTimer } = this.state;
-        console.log('task', task)
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" >
                 <Paper elevation={3} className={classes.card}>
@@ -138,7 +152,7 @@ class Essay extends Component {
                                     inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
                                     margin="normal"
                                 />
-                                <div style={{ textAlign: 'right' }}><Button variant="contained" color="primary" size="large">Submit</Button></div>
+                                <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
                             </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })}>Start Timer</Button></div>}
 
                     </Box>
