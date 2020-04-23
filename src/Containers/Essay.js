@@ -107,10 +107,7 @@ class Essay extends Component {
                 <Paper elevation={3} className={classes.card}>
                     <Box margin={3} className={classes.form}>
                         <Dropdown value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
-                        <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
-                            <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
-                            <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
-                        </Box>
+
                         <TextField
                             id="outlined-multiline-static"
                             label="Question"
@@ -125,6 +122,10 @@ class Essay extends Component {
                         />
                         {startTimer ?
                             <div>
+                                <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
+                                    <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
+                                    <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
+                                </Box>
                                 <TextField
                                     id="outlined-multiline-static"
                                     label="Answer"
