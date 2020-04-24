@@ -15,7 +15,8 @@ export const postData = (url, body, callback) => {
     fetch(url, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "authorization": localStorage.getItem('token')
         },
         body: JSON.stringify(body)
     }).then(res => res.json())

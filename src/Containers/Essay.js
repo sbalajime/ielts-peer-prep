@@ -11,7 +11,7 @@ import AppBar from '../Components/AppBar';
 import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api'
-
+import SnackBar from '../Components/SnackBar';
 
 
 const useStyles = (theme) => ({
@@ -58,7 +58,9 @@ class Essay extends Component {
             },
             currentWords: 0,
             task: '',
-            startTimer: false
+            startTimer: false,
+            apiError: false,
+            apiErrMessage: ""
         }
     }
 
@@ -98,10 +100,24 @@ class Essay extends Component {
         this.setState({ [input]: value, currentWords })
     }
 
-    afterPost = (result) => {
-        this.setState({ question: "", answer: "", task: "" })
-        window.alert(`Thank you`)
-        console.log(result)
+    afterPost = (resp) => {
+        if (resp.msg === 'successfull') {
+            //const { data } = resp;
+            //if (data) {
+            this.setState({ question: "", answer: "", task: "" })
+            //}
+        } else {
+            this.setState({ apiError: true, apiErrMessage: resp.msg })
+        }
+
+
+    }
+
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ apiError: false, apiErrMessage: '' });
     }
 
     handleClick = () => {
@@ -115,7 +131,7 @@ class Essay extends Component {
     }
     render() {
         const { classes } = this.props;
-        const { minimumWords, duration, timer, currentWords, answer, task, startTimer } = this.state;
+        const { minimumWords, duration, timer, currentWords, answer, task, startTimer, apiErrMessage, apiError } = this.state;
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
                 <AppBar />
@@ -155,7 +171,7 @@ class Essay extends Component {
                                 />
                                 <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
                             </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })}>Start Timer</Button></div>}
-
+                        <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
                     </Box>
                 </Paper>
             </Box >)
