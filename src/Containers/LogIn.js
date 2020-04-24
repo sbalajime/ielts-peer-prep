@@ -81,7 +81,7 @@ class Login extends React.Component {
         } else if (!password.trim()) {
             this.setState({ error: { ...error, password: true } });
         } else {
-            putData(`http://localhost:5000/user/login`, { email, password }, this.handleLoginResp);
+            putData(`/user/login`, { email, password }, this.handleLoginResp);
         }
     }
 

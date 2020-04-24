@@ -1,5 +1,6 @@
+import CONSTANTS from '../constants';
 export const putData = (url, body, callback) => {
-    fetch(url, {
+    fetch(`${CONSTANTS.API_URL}${url}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -12,7 +13,7 @@ export const putData = (url, body, callback) => {
 
 
 export const postData = (url, body, callback) => {
-    fetch(url, {
+    fetch(`${CONSTANTS.API_URL}${url}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

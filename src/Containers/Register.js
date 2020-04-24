@@ -87,7 +87,7 @@ class Signup extends React.Component {
             this.setState({ error: { email: false, password: false, rpass: false, fullName: true } });
         } else {
             this.setState({ error: {} })
-            postData(`http://localhost:5000/user/`, { email, password, fullName }, this.handleSignupResp);
+            postData(`/user/`, { email, password, fullName }, this.handleSignupResp);
         }
     }
 

@@ -30,6 +30,15 @@ const useStyles = (theme) => ({
     essaySection: {
         padding: theme.spacing(3),
         maxWidth: 500
+    }, reviewWrapper: {
+        padding: theme.spacing(3)
+    },
+    slideLabel: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    sliderRow: {
+        margin: '10px 0'
     }
 })
 
@@ -40,6 +49,22 @@ function valueLabelFormat(value) {
         .map((item) => Number(item));
     return `${Math.round(coefficient)}e^${exponent}`;
 }
+
+const ReviewRow = (props) => {
+    const { classes, label, value } = props;
+    return (
+        <Grid container spacing={1} className={classes.sliderRow} >
+            <Grid item lg={8} sm={8} xs={8} className={classes.slideLabel}><Typography variant="h5" component="h2" >
+                {label}
+            </Typography>
+            </Grid>
+            <Grid item lg={4} sm={4} xs={4} className={classes.slideLabel}>
+                <Typography variant="h5" component="h2" >
+                    {value}
+                </Typography>
+            </Grid>
+        </Grid>)
+}
 let question = `Some people say that E- books and modern technology will totally replace traditional newspaper and magazines to what extent do you agree or disagree.`
 let answer = `Technology is flourishing by leaps and bounds and providing us new avenues while keeping ourselves update with latest news and current affairs. Therefore, a fair amount of people believe, a conventional way of newspaper reading will be disappeared.I do not completely accord on it because conventional newspaper are easiest and cheapest way to get news.IELTS WRITING TASK 2 QUESTION ANSWER
 
@@ -48,6 +73,11 @@ To embark on, there are multiple reasons why the traditional ways of getting new
 However, undoubtedly, technology has given the radical approach to reading news, for example, videos provide full and clear view to reading besides that we can download, share and forward it to our relatives and friends. Needless to say that technophobic will be having no place in this ever-advanced modern world.
 
 To conclude, the lives of people are drastically affected by advanced versions of technology yet, in my opinion, it will not be able to pose threat to the existence traditional newspaper and magazines.`
+
+
+let comments = [{
+    fullName: "Balaji S"
+}]
 class MyEssay extends Component {
 
     render() {
@@ -68,51 +98,16 @@ class MyEssay extends Component {
 
                     </Grid>
                     <Grid item lg={6} sm={12} xs={12} >
-                        <Box height="100%" flexDirection="column" justifyContent="center">
-                            <Grid container spacing={1} className={classes.sliderRow} >
-                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                    Task Achievement
-                                </Typography>
-                                </Grid>
-                                <Grid item lg={4} sm={4} xs={4} >
-                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                        5
-                                </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1} className={classes.sliderRow}>
-                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                    Coherence and Cohesion
-                                </Typography>
-                                </Grid>
-                                <Grid item lg={4} lg={4} sm={4} xs={4} >
-                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                        5
-                                </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1} className={classes.sliderRow}>
-                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                    Lexical Resource
-                                </Typography>
-                                </Grid>
-                                <Grid item lg={4} sm={4} xs={4} >
-                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                        7
-                                </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1} className={classes.sliderRow}>
-                                <Grid item lg={8} lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                    Grammatical Range and Accuracy
-                                </Typography>
-                                </Grid>
-                                <Grid item lg={4} lg={4} sm={4} xs={4} >
-                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
-                                        8
-                                </Typography>
-                                </Grid>
-                            </Grid>
+                        <Box height="100%" display="flex" flexDirection="column" justifyContent="center">
+                            <Paper elevation={3} className={classes.reviewWrapper}>
+                                <ReviewRow label="Task Achievement" value="5/9" classes={classes} />
+                                <Divider />
+                                <ReviewRow label="Coherence and Cohesion" value="5/9" classes={classes} />
+                                <Divider />
+                                <ReviewRow label="Lexical Resource" value="5/9" classes={classes} />
+                                <Divider />
+                                <ReviewRow label=" Grammatical Range and Accuracy" value="5/9" classes={classes} />
+                            </Paper>
                         </Box>
                     </Grid>
                 </Grid>

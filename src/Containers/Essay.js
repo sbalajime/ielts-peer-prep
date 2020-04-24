@@ -123,7 +123,7 @@ class Essay extends Component {
     handleClick = () => {
         const { answer, question, task } = this.state
         const body = { essay: answer, user: 6, task, question }
-        postData(`http://localhost:5000/essay`, body, this.afterPost)
+        postData(`/essay`, body, this.afterPost)
     }
 
     handleSelectChange = (e) => {
