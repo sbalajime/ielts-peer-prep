@@ -1,0 +1,124 @@
+import React, { Component } from 'react';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import AppBar from '../Components/AppBar';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Slider from '@material-ui/core/Slider';
+
+const useStyles = (theme) => ({
+    card: {
+        width: 'auto',
+        padding: theme.spacing(3),
+        flexGrow: 1,
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(1)
+        }
+    },
+    answer: {
+        fontSize: 16
+    },
+    divider: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
+    },
+    reviewSection: {
+        width: '100%'
+    },
+    essaySection: {
+        padding: theme.spacing(3),
+        maxWidth: 500
+    }
+})
+
+function valueLabelFormat(value) {
+    const [coefficient, exponent] = value
+        .toExponential()
+        .split('e')
+        .map((item) => Number(item));
+    return `${Math.round(coefficient)}e^${exponent}`;
+}
+let question = `Some people say that E- books and modern technology will totally replace traditional newspaper and magazines to what extent do you agree or disagree.`
+let answer = `Technology is flourishing by leaps and bounds and providing us new avenues while keeping ourselves update with latest news and current affairs. Therefore, a fair amount of people believe, a conventional way of newspaper reading will be disappeared.I do not completely accord on it because conventional newspaper are easiest and cheapest way to get news.IELTS WRITING TASK 2 QUESTION ANSWER
+
+To embark on, there are multiple reasons why the traditional ways of getting news are still popular. First of all, reading newspaper has become ardent habit of many people. Everyone whether from affluent or middle class are seen desperately waiting for paper in morning and enjoy it reading with cup of tea.Moreover, these are the portable, cheapest an easiest way of knowing about the global activities. It can be carried from one place to other in bag and available at economical price. It is so handy and merely by continuing flip of pages can make you omniscient. Secondly,electricity and other appliances are not required. Moreover,the other attachments are like icing on the cake. For instance, the Hindustan times has multiple attachments like women’s fashion, career guide, culinary art and so on.
+
+However, undoubtedly, technology has given the radical approach to reading news, for example, videos provide full and clear view to reading besides that we can download, share and forward it to our relatives and friends. Needless to say that technophobic will be having no place in this ever-advanced modern world.
+
+To conclude, the lives of people are drastically affected by advanced versions of technology yet, in my opinion, it will not be able to pose threat to the existence traditional newspaper and magazines.`
+class MyEssay extends Component {
+
+    render() {
+        const { classes } = this.props;
+        return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
+            <AppBar />
+            <Paper elevation={3} className={classes.card}>
+                <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
+                    <Grid item lg={6} sm={12} xs={12} >
+                        <Box display="flex" flexDirection="column" alignItems="center"><Box className={classes.essaySection}>
+                            <Typography variant="h5" component="h2" gutterBottom>
+                                {question}
+                            </Typography>
+                            <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                {answer}
+                            </Typography>
+                        </Box></Box>
+
+                    </Grid>
+                    <Grid item lg={6} sm={12} xs={12} >
+                        <Box height="100%" flexDirection="column" justifyContent="center">
+                            <Grid container spacing={1} className={classes.sliderRow} >
+                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                    Task Achievement
+                                </Typography>
+                                </Grid>
+                                <Grid item lg={4} sm={4} xs={4} >
+                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                        5
+                                </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} className={classes.sliderRow}>
+                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                    Coherence and Cohesion
+                                </Typography>
+                                </Grid>
+                                <Grid item lg={4} lg={4} sm={4} xs={4} >
+                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                        5
+                                </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} className={classes.sliderRow}>
+                                <Grid item lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                    Lexical Resource
+                                </Typography>
+                                </Grid>
+                                <Grid item lg={4} sm={4} xs={4} >
+                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                        7
+                                </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} className={classes.sliderRow}>
+                                <Grid item lg={8} lg={8} sm={8} xs={8} ><Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                    Grammatical Range and Accuracy
+                                </Typography>
+                                </Grid>
+                                <Grid item lg={4} lg={4} sm={4} xs={4} >
+                                    <Typography variant="h5" component="h2" className={classes.slideLabel}>
+                                        8
+                                </Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Paper>
+        </Box >)
+    }
+}
+
+export default withStyles(useStyles)(MyEssay);

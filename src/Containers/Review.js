@@ -10,6 +10,7 @@ import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+import AppBar from '../Components/AppBar';
 
 const useStyles = (theme) => ({
     reviewSection: {
@@ -21,8 +22,8 @@ const useStyles = (theme) => ({
         marginRight: theme.spacing(4)
     },
     root: {
-        width: '100%',
-        margin: theme.spacing(3)
+        flexGrow: 1,
+        padding: theme.spacing(3)
     },
     bullet: {
         display: 'inline-block',
@@ -70,7 +71,8 @@ class Review extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
         return (
-            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" >
+            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column">
+                <AppBar />
                 <Card className={classes.root}>
                     <CardContent>
                         <Typography variant="h5" component="h2" gutterBottom>

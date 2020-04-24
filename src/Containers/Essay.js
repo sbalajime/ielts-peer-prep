@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import TimerOutlinedIcon from '@material-ui/icons/TimerOutlined';
-
+import AppBar from '../Components/AppBar';
 
 import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
@@ -21,10 +21,10 @@ const useStyles = (theme) => ({
         }
     },
     card: {
-        width: '100%',
-        margin: theme.spacing(3),
+        flexGrow: 1,
+        padding: theme.spacing(3),
         [theme.breakpoints.down('sm')]: {
-            margin: theme.spacing(1)
+            padding: theme.spacing(1)
         }
     }, form: {
         margin: theme.spacing(2),
@@ -117,7 +117,8 @@ class Essay extends Component {
         const { classes } = this.props;
         const { minimumWords, duration, timer, currentWords, answer, task, startTimer } = this.state;
         return (
-            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" >
+            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
+                <AppBar />
                 <Paper elevation={3} className={classes.card}>
                     <Box margin={3} className={classes.form}>
                         <Dropdown value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
