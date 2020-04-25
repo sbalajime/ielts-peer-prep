@@ -11,8 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import AppBar from '../Components/AppBar';
+import SnackBar from '../Components/SnackBar';
 
-import { getData } from '../Utils/Api';
+import { getData, postData } from '../Utils/Api';
 
 const useStyles = (theme) => ({
     reviewSection: {
@@ -63,12 +64,32 @@ function valueLabelFormat(value) {
     return `${Math.round(coefficient)}e^${exponent}`;
 }
 
-
+const BandSlider = (props) => {
+    const { classes, label, handleChange } = props;
+    return (<Grid container spacing={1} className={classes.sliderRow}>
+        <Grid item lg={6} sm={6} xs={6} ><Typography variant="body2" className={classes.slideLabel}>
+            {label}
+        </Typography>
+        </Grid>
+        <Grid item lg={6} sm={6} xs={6} >
+            <Slider
+                defaultValue={1}
+                getAriaValueText={valueLabelFormat}
+                aria-labelledby="discrete-slider-always"
+                step={1}
+                min={1}
+                max={9}
+                onChange={(e, val) => handleChange(label, val)}
+                valueLabelDisplay="on"
+            /></Grid>
+    </Grid>)
+}
 class Review extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            comments: ''
+            comments: '',
+            sliders: {}, showSnackBar: false, snackBarMsg: '', snackBarType: ''
         }
     }
 
@@ -88,10 +109,49 @@ class Review extends Component {
         }
 
     }
+
+    handleSliderChange = (label, value) => {
+        console.log('e', label, value);
+        this.setState({
+            sliders: {
+                ...this.state.sliders,
+                [label]: value
+            }
+        })
+    }
+
+    handleClick = () => {
+        const { sliders } = this.state;
+        postData('/review', { sliders, essayId: this.props.match.params.id }, this.handleReviewResp)
+    }
+
+    handleReviewResp = (resp) => {
+        if (resp.status == 'success') {
+            this.setState({ showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
+        } else {
+            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+        }
+
+    }
+
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ showSnackBar: false, snackBarMsg: '' });
+    }
+
     render() {
         const { classes } = this.props;
-        const { question, answer, task } = this.state;
-        console.log('question', question, 'answer', answer);
+        const { question, answer, task, sliders, showSnackBar, snackBarMsg, snackBarType } = this.state;
+        console.log('SLIDERS', sliders);
+        let bandDescriptors = [
+            'Task Achievement',
+            'Coherence and Cohesion',
+            'Lexical Resource',
+            'Grammatical Range and Accuracy'
+        ]
+        console.log(showSnackBar, snackBarMsg, snackBarType);
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column">
                 <AppBar />
@@ -115,70 +175,7 @@ class Review extends Component {
                     <CardActions>
                         <Grid container spacing={5}>
                             <Grid item lg={6} sm={12} xs={12}>
-                                <Grid container spacing={1} className={classes.sliderRow}>
-                                    <Grid item lg={6} sm={6} xs={6} ><Typography variant="body2" className={classes.slideLabel}>
-                                        Task Achievement
-                                </Typography>
-                                    </Grid>
-                                    <Grid item lg={6} sm={6} xs={6} >
-                                        <Slider
-                                            defaultValue={1}
-                                            getAriaValueText={valueLabelFormat}
-                                            aria-labelledby="discrete-slider-always"
-                                            step={1}
-                                            min={1}
-                                            max={9}
-                                            valueLabelDisplay="on"
-                                        /></Grid>
-                                </Grid>
-                                <Grid container spacing={1} className={classes.sliderRow}>
-                                    <Grid item lg={6} sm={6} xs={6} ><Typography variant="body2" className={classes.slideLabel}>
-                                        Coherence and Cohesion
-                                </Typography>
-                                    </Grid>
-                                    <Grid item lg={6} lg={6} sm={6} xs={6} >
-                                        <Slider
-                                            defaultValue={1}
-                                            getAriaValueText={valueLabelFormat}
-                                            aria-labelledby="discrete-slider-always"
-                                            step={1}
-                                            min={1}
-                                            max={9}
-                                            valueLabelDisplay="on"
-                                        /></Grid>
-                                </Grid>
-                                <Grid container spacing={1} className={classes.sliderRow}>
-                                    <Grid item lg={6} sm={6} xs={6} ><Typography variant="body2" className={classes.slideLabel}>
-                                        Lexical Resource
-                                </Typography>
-                                    </Grid>
-                                    <Grid item lg={6} lg={6} sm={6} xs={6} >
-                                        <Slider
-                                            defaultValue={1}
-                                            getAriaValueText={valueLabelFormat}
-                                            aria-labelledby="discrete-slider-always"
-                                            step={1}
-                                            min={1}
-                                            max={9}
-                                            valueLabelDisplay="on"
-                                        /></Grid>
-                                </Grid>
-                                <Grid container spacing={1} className={classes.sliderRow}>
-                                    <Grid item lg={6} lg={6} sm={6} xs={6} ><Typography variant="body2" className={classes.slideLabel}>
-                                        Grammatical Range and Accuracy
-                                </Typography>
-                                    </Grid>
-                                    <Grid item lg={6} lg={6} sm={6} xs={6} >
-                                        <Slider
-                                            defaultValue={1}
-                                            getAriaValueText={valueLabelFormat}
-                                            aria-labelledby="discrete-slider-always"
-                                            step={1}
-                                            min={1}
-                                            max={9}
-                                            valueLabelDisplay="on"
-                                        /></Grid>
-                                </Grid>
+                                {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
                             </Grid>
                             <Grid item lg={6} sm={12} xs={12}>
                                 <Box className={classes.comments}><TextField
@@ -198,7 +195,7 @@ class Review extends Component {
                                 <div style={{ marginTop: 20, width: '100%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
                             </Grid>
                         </Grid>
-
+                        <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                     </CardActions>
                 </Card>
             </Box >
