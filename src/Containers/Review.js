@@ -138,7 +138,12 @@ class Review extends Component {
         if (reason === 'clickaway') {
             return;
         }
-        this.setState({ showSnackBar: false, snackBarMsg: '' });
+        this.setState({ showSnackBar: false }, () => {
+            const { snackBarMsg } = this.state;
+            if (snackBarMsg) {
+                this.props.history.push(`/essay/${this.props.match.params.id}`)
+            }
+        });
     }
 
     render() {

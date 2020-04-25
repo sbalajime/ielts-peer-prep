@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const EssayCard = (props) => {
     const classes = useStyles();
     const history = useHistory();
-    return (<Card className={classes.root} onClick={() => history.push(`/review/${props.essayid}`)}>
+    return (<Card className={classes.root} onClick={() => history.push(`/${props.reviewed_by_me ? 'essay' : 'review'}/${props.essayid}`)}>
         <CardContent>
 
             <Typography component="h6" className={classes.question}>

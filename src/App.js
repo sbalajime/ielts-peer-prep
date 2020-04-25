@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" exact render={props => <Login {...props} />} />
           <Route path="/write" exact render={props => <Essay {...props} />} />
           <Route path="/review/:id" render={props => protectedRoute(Review, props)} />
-          <Route path="/myessay" render={props => protectedRoute(MyEssay, props)} />
+          <Route path="/essay/:id" render={props => protectedRoute(MyEssay, props)} />
         </Switch>
 
       </div>

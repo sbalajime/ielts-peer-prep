@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '../Components/AppBar';
@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
+
+import { getData } from '../Utils/Api';
 
 const useStyles = (theme) => ({
     card: {
@@ -80,8 +82,32 @@ let comments = [{
 }]
 class MyEssay extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            showSnackBar: false,
+            snackBarMessage: '',
+            snackBarType: '',
+            review: []
+        }
+    }
+
+    componentDidMount() {
+        getData(`/review/${this.props.match.params.id}`, this.handleReviewResp);
+    }
+
+    handleReviewResp = (resp) => {
+        if (resp.status == 'success') {
+            this.setState({ review: resp.rows, showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
+        } else {
+            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+        }
+
+    }
+
     render() {
         const { classes } = this.props;
+        const { review } = this.state;
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBar />
             <Paper elevation={3} className={classes.card}>
@@ -100,13 +126,10 @@ class MyEssay extends Component {
                     <Grid item lg={6} sm={12} xs={12} >
                         <Box height="100%" display="flex" flexDirection="column" justifyContent="center">
                             <Paper elevation={3} className={classes.reviewWrapper}>
-                                <ReviewRow label="Task Achievement" value="5/9" classes={classes} />
-                                <Divider />
-                                <ReviewRow label="Coherence and Cohesion" value="5/9" classes={classes} />
-                                <Divider />
-                                <ReviewRow label="Lexical Resource" value="5/9" classes={classes} />
-                                <Divider />
-                                <ReviewRow label=" Grammatical Range and Accuracy" value="5/9" classes={classes} />
+                                {review.map((row, index) => <Fragment key={index}>
+                                    <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
+                                    <Divider />
+                                </Fragment>)}
                             </Paper>
                         </Box>
                     </Grid>
