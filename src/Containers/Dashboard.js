@@ -7,6 +7,8 @@ import AppBar from '../Components/AppBar';
 
 import EssayCard from '../Components/EssayCard';
 
+import { getData } from '../Utils/Api';
+
 
 const useStyles = (theme) => ({
     root: {
@@ -56,51 +58,33 @@ const useStyles = (theme) => ({
     }
 });
 
-const essayData = [{
-    question: `Write about the following topic:
-    Using a computer every day can have more negative than positive effects on your children.
-    Do you agree or disagree?
-    Give reasons for your answer and include any relevant examples from your own knowledge or experience.`,
-    fullName: 'Balaji S',
-    date: '24/04/2020'
-}, {
-    question: `Write about the following topic:
-    Using a computer every day can have more negative than positive effects on your children.
-    Do you agree or disagree?
-    Give reasons for your answer and include any relevant examples from your own knowledge or experience.`,
-    fullName: 'Balaji S',
-    date: '24/04/2020'
-}, {
-    question: `Write about the following topic:
-    Using a computer every day can have more negative than positive effects on your children.
-    Do you agree or disagree?
-    Give reasons for your answer and include any relevant examples from your own knowledge or experience.`,
-    fullName: 'Balaji S',
-    date: '24/04/2020'
-}, {
-    question: `Write about the following topic:
-    Using a computer every day can have more negative than positive effects on your children.
-    Do you agree or disagree?
-    Give reasons for your answer and include any relevant examples from your own knowledge or experience.`,
-    fullName: 'Balaji S',
-    date: '24/04/2020'
-}, {
-    question: `Write about the following topic:
-    Using a computer every day can have more negative than positive effects on your children.
-    Do you agree or disagree?
-    Give reasons for your answer and include any relevant examples from your own knowledge or experience.`,
-    fullName: 'Balaji S',
-    date: '24/04/2020'
-}]
+
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            essays: []
+        }
+    }
+    componentDidMount() {
+        getData('/essay', this.handleEssays)
+    }
+
+    handleEssays = (res) => {
+        console.log('res', res)
+        if (res.status === 'success') {
+            this.setState({ essays: res.rows })
+        }
+    }
     render() {
         const { classes } = this.props;
+        const { essays } = this.state
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBar />
                 <Paper elevation={3} className={classes.card}>
                     <Box className={classes.cardContainer}>
-                        {essayData.map((essay, index) => <EssayCard key={index} {...essay} />)}
+                        {essays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>
                 </Paper>
             </Box >)

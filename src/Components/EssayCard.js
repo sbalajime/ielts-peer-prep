@@ -17,6 +17,15 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             boxShadow: `0 14px 28px ${theme.palette.primary.light}, 0 10px 10px ${theme.palette.primary.light}`
         }
+    },
+    question: {
+        height: 100,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: 'block',
+        display: '-webkit-box',
+        '-webkit-line-clamp': 4,
+        '-webkit-box-orient': 'vertical',
     }
 }));
 
@@ -24,17 +33,17 @@ const useStyles = makeStyles((theme) => ({
 const EssayCard = (props) => {
     const classes = useStyles();
     const history = useHistory();
-    return (<Card className={classes.root} onClick={() => history.push('/review')}>
+    return (<Card className={classes.root} onClick={() => history.push(`/review/${props.essayid}`)}>
         <CardContent>
 
-            <Typography component="h6">
+            <Typography component="h6" className={classes.question}>
                 {props.question}
             </Typography>
             <Typography color="textSecondary">
-                {props.fullName}
+                {props.username}
             </Typography>
             <Typography variant="body2" component="p">
-                {props.date}
+                {new Date(props.createdtime).toLocaleDateString()}
             </Typography>
         </CardContent>
     </Card>)

@@ -20,7 +20,7 @@ function App() {
           <Route path="/" exact render={props => protectedRoute(Dashboard, props)} />
           <Route path="/login" exact render={props => <Login {...props} />} />
           <Route path="/write" exact render={props => <Essay {...props} />} />
-          <Route path="/review" exact render={props => protectedRoute(Review, props)} />
+          <Route path="/review/:id" render={props => protectedRoute(Review, props)} />
           <Route path="/myessay" render={props => protectedRoute(MyEssay, props)} />
         </Switch>
 
