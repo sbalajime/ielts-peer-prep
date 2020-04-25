@@ -101,7 +101,7 @@ class Essay extends Component {
     }
 
     afterPost = (resp) => {
-        if (resp.msg === 'successfull') {
+        if (resp.status === 'success') {
             //const { data } = resp;
             //if (data) {
             this.setState({ question: "", answer: "", task: "" })
