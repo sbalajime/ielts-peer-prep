@@ -2,6 +2,8 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
@@ -39,6 +41,7 @@ const EssayCard = (props) => {
             <Typography component="h6" className={classes.question}>
                 {props.question}
             </Typography>
+            {props.reviewed_by_me && <Chip label={'You Reviewed'} color='primary' icon={<DoneIcon />} />}
             <Typography color="textSecondary">
                 {props.username}
             </Typography>
