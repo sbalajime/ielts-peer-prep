@@ -159,50 +159,57 @@ class Review extends Component {
         ]
         console.log(showSnackBar, snackBarMsg, snackBarType);
         return (
-            <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column">
+            <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
                 <Card className={classes.root}>
-                    <CardContent>
-                        <Typography variant="h5" component="h2" gutterBottom>
-                            Question
+                    <Grid container spacing={2}>
+
+                        <Grid item xs={12} sm={12} lg={6} spacing={2}>
+                            <CardContent>
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    Question
                         </Typography>
-                        <Typography variant="body2" component="p" gutterBottom>
-                            {question}
+                                <Typography variant="body2" component="p" gutterBottom>
+                                    {question}
+                                </Typography>
+                                <Divider className={classes.divider} />
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    Answer
                         </Typography>
-                        <Divider className={classes.divider} />
-                        <Typography variant="h5" component="h2" gutterBottom>
-                            Answer
-                        </Typography>
-                        <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
-                            {answer}
-                        </Typography>
-                    </CardContent>
-                    <Divider className={classes.divider} />
-                    <CardActions>
-                        <Grid container spacing={5}>
-                            <Grid item lg={6} sm={12} xs={12}>
-                                {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
-                            </Grid>
-                            <Grid item lg={6} sm={12} xs={12}>
-                                <Box className={classes.comments}><TextField
-                                    id="outlined-multiline-static"
-                                    label="Comments (*optional)"
-                                    multiline
-                                    rows={5}
-                                    value={this.state.comments}
-                                    onChange={(e) => this.handleChange('question', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth={true}
-                                    inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                                    margin=""
-                                /></Box>
-                            </Grid>
-                            <Grid item lg={12} sm={12} xs={12}>
-                                <div style={{ marginTop: 20, width: '100%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
-                            </Grid>
+                                <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                    {answer}
+                                </Typography>
+                            </CardContent>
                         </Grid>
-                        <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
-                    </CardActions>
+                        <Divider className={classes.divider} />
+                        <Grid item xs={12} sm={12} lg={6} spacing={2}>
+                            <CardActions>
+                                <Grid container>
+                                    <Grid item lg={12} sm={12} xs={12}>
+                                        {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
+                                    </Grid>
+                                    <Grid item lg={12} sm={12} xs={12}>
+                                        <Box className={classes.comments}><TextField
+                                            id="outlined-multiline-static"
+                                            label="Comments (*optional)"
+                                            multiline
+                                            rows={5}
+                                            value={this.state.comments}
+                                            onChange={(e) => this.handleChange('question', e.target.value)}
+                                            variant="outlined"
+                                            fullWidth={true}
+                                            inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                            margin=""
+                                        /></Box>
+                                    </Grid>
+                                    <Grid item lg={12} sm={12} xs={12}>
+                                        <div style={{ marginTop: 20, width: '90%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
+                                    </Grid>
+                                </Grid>
+                                <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
+                            </CardActions>
+                        </Grid>
+                    </Grid>
                 </Card>
                 <FooterComponent />
             </Box >
