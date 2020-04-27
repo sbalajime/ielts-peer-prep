@@ -48,7 +48,7 @@ const useStyles = (theme) => ({
         padding: theme.spacing(2)
     },
     comments: {
-        padding: theme.spacing(9),
+        padding: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(2)
         },
