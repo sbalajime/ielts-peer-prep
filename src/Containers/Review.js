@@ -77,7 +77,7 @@ const BandSlider = (props) => {
                 defaultValue={1}
                 getAriaValueText={valueLabelFormat}
                 aria-labelledby="discrete-slider-always"
-                step={1}
+                step={0.5}
                 min={1}
                 max={9}
                 onChange={(e, val) => handleChange(label, val)}
