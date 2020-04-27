@@ -6,8 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import TimerOutlinedIcon from '@material-ui/icons/TimerOutlined';
-import AppBar from '../Components/AppBar';
-
+import AppBarComponent from '../Components/AppBar'
+import FooterComponent from '../Components/Footer';
 import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api'
@@ -134,7 +134,7 @@ class Essay extends Component {
         const { minimumWords, duration, timer, currentWords, answer, task, startTimer, apiErrMessage, apiError } = this.state;
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
-                <AppBar />
+                <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
                     <Box margin={3} className={classes.form}>
                         <Dropdown value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
@@ -174,6 +174,7 @@ class Essay extends Component {
                         <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
                     </Box>
                 </Paper>
+                <FooterComponent />
             </Box >)
     }
 }

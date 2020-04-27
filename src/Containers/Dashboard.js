@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
-
-import AppBar from '../Components/AppBar';
+import AppBarComponent from '../Components/AppBar'
+import FooterComponent from '../Components/Footer';
 
 import EssayCard from '../Components/EssayCard';
 
@@ -81,12 +81,13 @@ class Dashboard extends Component {
         const { essays } = this.state
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
-                <AppBar />
+                <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
                     <Box className={classes.cardContainer}>
                         {essays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>
                 </Paper>
+                <FooterComponent />
             </Box >)
     }
 }

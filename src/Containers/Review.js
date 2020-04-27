@@ -10,7 +10,8 @@ import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
-import AppBar from '../Components/AppBar';
+import AppBarComponent from '../Components/AppBar'
+import FooterComponent from '../Components/Footer';
 import SnackBar from '../Components/SnackBar';
 
 import { getData, postData } from '../Utils/Api';
@@ -159,7 +160,7 @@ class Review extends Component {
         console.log(showSnackBar, snackBarMsg, snackBarType);
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column">
-                <AppBar />
+                <AppBarComponent />
                 <Card className={classes.root}>
                     <CardContent>
                         <Typography variant="h5" component="h2" gutterBottom>
@@ -203,6 +204,7 @@ class Review extends Component {
                         <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                     </CardActions>
                 </Card>
+                <FooterComponent />
             </Box >
 
         )

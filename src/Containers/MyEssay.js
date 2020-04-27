@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import AppBar from '../Components/AppBar';
+
+import AppBarComponent from '../Components/AppBar'
+import FooterComponent from '../Components/Footer';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
@@ -109,7 +111,7 @@ class MyEssay extends Component {
         const { classes } = this.props;
         const { review } = this.state;
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
-            <AppBar />
+            <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
                 <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
                     <Grid item lg={6} sm={12} xs={12} >
@@ -135,6 +137,7 @@ class MyEssay extends Component {
                     </Grid>
                 </Grid>
             </Paper>
+            <FooterComponent />
         </Box >)
     }
 }
