@@ -112,12 +112,12 @@ class MyEssay extends Component {
     handleReviewResp = (resp) => {
         if (resp.status == 'success') {
             console.log(resp)
-            if (resp.rows.length === 0) {
+            if (resp.rows.reviews.length === 0 || !resp.rows.reviewedbyme) {
                 this.props.history.push(`/`)
             }
             else {
                 this.setState({
-                    review: resp.rows, showSnackBar: true, snackBarMsg: 'Your Score', snackBarType: 'success'
+                    review: resp.rows.reviews, showSnackBar: true, snackBarMsg: 'Your Score', snackBarType: 'success'
                 })
             }
 
