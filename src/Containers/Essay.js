@@ -132,6 +132,7 @@ class Essay extends Component {
     render() {
         const { classes } = this.props;
         const { minimumWords, duration, timer, currentWords, answer, task, startTimer, apiErrMessage, apiError } = this.state;
+
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
                 <AppBarComponent />

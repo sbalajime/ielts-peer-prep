@@ -100,17 +100,21 @@ class Review extends Component {
     }
 
     processData = (res) => {
+        console.log(res)
         if (res.status == 'success') {
-            const { answer, question, task } = res.rows[0];
-            this.setState({
-                question,
-                answer,
-                task
-            })
+            if (res.rows.length === 0)
+                this.props.history.push('/')
+            else {
+                const { answer, question, task } = res.rows[0];
+                this.setState({
+                    question,
+                    answer,
+                    task
+                })
+            }
+
         }
-
     }
-
     handleSliderChange = (label, value) => {
         console.log('e', label, value);
         this.setState({

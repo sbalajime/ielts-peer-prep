@@ -95,6 +95,7 @@ class MyEssay extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         getData(`/review/${this.props.match.params.id}`, this.handleReviewResp);
         getData(`/essay/${this.props.match.params.id}`, this.handleEssayResp)
     }
@@ -110,7 +111,15 @@ class MyEssay extends Component {
 
     handleReviewResp = (resp) => {
         if (resp.status == 'success') {
-            this.setState({ review: resp.rows, showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
+            console.log(resp)
+            if (resp.rows.length === 0) {
+                this.props.history.push(`/`)
+            } else {
+                this.setState({
+                    review: resp.rows, showSnackBar: true, snackBarMsg: 'Your Score', snackBarType: 'success'
+                })
+            }
+
         } else {
             this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
         }
@@ -120,6 +129,7 @@ class MyEssay extends Component {
     render() {
         const { classes } = this.props;
         const { review, essay } = this.state;
+        console.log(essay)
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
@@ -133,7 +143,6 @@ class MyEssay extends Component {
                                 {essay.answer}
                             </Typography>
                         </Box></Box>
-
                     </Grid>
                     <Grid item lg={6} sm={12} xs={12} >
                         <Box height="100%" display="flex" flexDirection="column" justifyContent="center">
