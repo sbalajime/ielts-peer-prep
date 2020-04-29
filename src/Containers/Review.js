@@ -102,9 +102,7 @@ class Review extends Component {
     processData = (res) => {
         console.log(res)
         if (res.status == 'success') {
-            if (res.rows.length === 0)
-                this.props.history.push('/')
-            else if (res.rows[0].reviewedbyme)
+            if (res.rows.length === 0 || res.rows[0].reviewedbyme)
                 this.props.history.push('/')
             else {
                 const { answer, question, task } = res.rows[0];
