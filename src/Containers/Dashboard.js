@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
+import Loader from '../Components/Loader';
 
 import EssayCard from '../Components/EssayCard';
 
@@ -20,6 +21,7 @@ const useStyles = (theme) => ({
         width: 'auto',
         padding: theme.spacing(3),
         flexGrow: 1,
+        display: 'flex', flexDirection: 'column',
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(1)
         }
@@ -63,29 +65,32 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            essays: []
+            essays: [], loading: false
         }
     }
     componentDidMount() {
-        getData('/essay', this.handleEssays)
+        this.setState({ loading: true }, () => getData('/essay', this.handleEssays));
+
     }
 
     handleEssays = (res) => {
-        console.log('res', res)
-        if (res.status === 'success') {
-            this.setState({ essays: res.rows })
-        }
+        this.setState({ loading: false }, () => {
+            if (res.status === 'success') {
+                this.setState({ essays: res.rows })
+            }
+        })
+
     }
     render() {
         const { classes } = this.props;
-        const { essays } = this.state
+        const { essays, loading } = this.state;
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
-                    <Box className={classes.cardContainer}>
+                    {loading ? <Loader /> : <Box className={classes.cardContainer}>
                         {essays.map((essay, index) => <EssayCard key={index} {...essay} />)}
-                    </Box>
+                    </Box>}
                 </Paper>
                 <FooterComponent />
             </Box >)

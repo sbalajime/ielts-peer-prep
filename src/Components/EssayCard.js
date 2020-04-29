@@ -28,6 +28,14 @@ const useStyles = makeStyles((theme) => ({
         display: '-webkit-box',
         '-webkit-line-clamp': 4,
         '-webkit-box-orient': 'vertical',
+    }, bottomText: {
+        textAlign: 'right'
+    },
+    chipVisible: {
+        visibility: 'visible'
+    },
+    chipHide: {
+        visibility: 'hidden'
     }
 }));
 
@@ -41,11 +49,11 @@ const EssayCard = (props) => {
             <Typography component="h6" className={classes.question}>
                 {props.question}
             </Typography>
-            {props.reviewed_by_me && <Chip label={'You Reviewed'} color='primary' icon={<DoneIcon />} />}
-            <Typography color="textSecondary">
+            {<Chip size="small" label={'You Reviewed'} color='primary' className={props.reviewed_by_me ? classes.chipVisible : classes.chipHide} icon={<DoneIcon />} />}
+            <Typography color="textSecondary" className={classes.bottomText}>
                 {props.username}
             </Typography>
-            <Typography variant="body2" component="p">
+            <Typography variant="body2" component="p" className={classes.bottomText}>
                 {new Date(props.createdtime).toLocaleDateString()}
             </Typography>
         </CardContent>

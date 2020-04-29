@@ -10,9 +10,11 @@ import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
 import SnackBar from '../Components/SnackBar';
+import Loader from '../Components/Loader';
 
 import { getData, postData } from '../Utils/Api';
 
@@ -27,7 +29,8 @@ const useStyles = (theme) => ({
     },
     root: {
         flexGrow: 1,
-        padding: theme.spacing(3)
+        padding: theme.spacing(3),
+        display: 'flex', flexDirection: 'column'
     },
     bullet: {
         display: 'inline-block',
@@ -90,33 +93,34 @@ class Review extends Component {
         super(props);
         this.state = {
             comments: '',
-            sliders: {}, showSnackBar: false, snackBarMsg: '', snackBarType: ''
+            sliders: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '', loading: false
         }
     }
 
     componentDidMount() {
-        console.log('this.props', this.props)
-        getData(`/essay/${this.props.match.params.id}`, this.processData);
+        this.setState({ loading: true }, () => getData(`/essay/${this.props.match.params.id}`, this.processData));
+
     }
 
     processData = (res) => {
-        console.log(res)
-        if (res.status == 'success') {
-            if (res.rows.length === 0 || res.rows[0].reviewedbyme)
-                this.props.history.push('/')
-            else {
-                const { answer, question, task } = res.rows[0];
-                this.setState({
-                    question,
-                    answer,
-                    task
-                })
-            }
+        this.setState({ loading: false }, () => {
+            if (res.status == 'success') {
+                if (res.rows.length === 0 || res.rows[0].reviewedbyme)
+                    this.props.history.push('/')
+                else {
+                    const { answer, question, task } = res.rows[0];
+                    this.setState({
+                        question,
+                        answer,
+                        task
+                    })
+                }
 
-        }
+            }
+        })
+
     }
     handleSliderChange = (label, value) => {
-        console.log('e', label, value);
         this.setState({
             sliders: {
                 ...this.state.sliders,
@@ -127,15 +131,20 @@ class Review extends Component {
 
     handleClick = () => {
         const { sliders } = this.state;
-        postData('/review', { sliders, essayId: this.props.match.params.id }, this.handleReviewResp)
+        this.setState({ loading: true }, () => postData('/review', { sliders, essayId: this.props.match.params.id }, this.handleReviewResp))
     }
 
     handleReviewResp = (resp) => {
-        if (resp.status == 'success') {
-            this.setState({ showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
-        } else {
-            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
-        }
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
+            } else if (resp.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
+
+            }
+        });
 
     }
 
@@ -145,7 +154,7 @@ class Review extends Component {
         }
         this.setState({ showSnackBar: false }, () => {
             const { snackBarMsg } = this.state;
-            if (snackBarMsg) {
+            if (snackBarMsg && snackBarMsg.match(/success/i) && snackBarMsg.match(/success/i).length) {
                 this.props.history.push(`/essay/${this.props.match.params.id}`)
             }
         });
@@ -153,67 +162,67 @@ class Review extends Component {
 
     render() {
         const { classes } = this.props;
-        const { question, answer, task, sliders, showSnackBar, snackBarMsg, snackBarType } = this.state;
-        console.log('SLIDERS', sliders);
+        const { question, answer, task, sliders, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
         let bandDescriptors = [
             'Task Achievement',
             'Coherence and Cohesion',
             'Lexical Resource',
             'Grammatical Range and Accuracy'
-        ]
-        console.log(showSnackBar, snackBarMsg, snackBarType);
+        ];
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
                 <Card className={classes.root}>
-                    <Grid container spacing={2}>
+                    {loading ? <Loader /> :
+                        <Grid container spacing={2}>
 
-                        <Grid item xs={12} sm={12} lg={6} spacing={2}>
-                            <CardContent>
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    Question
+                            <Grid item xs={12} sm={12} lg={6} spacing={2}>
+                                <CardContent>
+                                    <Typography variant="h5" component="h2" gutterBottom>
+                                        Question
                         </Typography>
-                                <Typography variant="body2" component="p" gutterBottom>
-                                    {question}
-                                </Typography>
-                                <Divider className={classes.divider} />
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    Answer
+                                    <Typography variant="body2" component="p" gutterBottom>
+                                        {question}
+                                    </Typography>
+                                    <Divider className={classes.divider} />
+                                    <Typography variant="h5" component="h2" gutterBottom>
+                                        Answer
                         </Typography>
-                                <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
-                                    {answer}
-                                </Typography>
-                            </CardContent>
-                        </Grid>
-                        <Divider className={classes.divider} />
-                        <Grid item xs={12} sm={12} lg={6} spacing={2}>
-                            <CardActions>
-                                <Grid container>
-                                    <Grid item lg={12} sm={12} xs={12}>
-                                        {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
+                                    <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                        {answer}
+                                    </Typography>
+                                </CardContent>
+                            </Grid>
+                            <Divider className={classes.divider} />
+                            <Grid item xs={12} sm={12} lg={6} spacing={2}>
+                                <CardActions>
+                                    <Grid container>
+                                        <Grid item lg={12} sm={12} xs={12}>
+                                            {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
+                                        </Grid>
+                                        <Grid item lg={12} sm={12} xs={12}>
+                                            <Box className={classes.comments}><TextField
+                                                id="outlined-multiline-static"
+                                                label="Comments (*optional)"
+                                                multiline
+                                                rows={5}
+                                                value={this.state.comments}
+                                                onChange={(e) => this.handleChange('question', e.target.value)}
+                                                variant="outlined"
+                                                fullWidth={true}
+                                                inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                                margin=""
+                                            /></Box>
+                                        </Grid>
+                                        <Grid item lg={12} sm={12} xs={12}>
+                                            <div style={{ marginTop: 20, width: '90%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item lg={12} sm={12} xs={12}>
-                                        <Box className={classes.comments}><TextField
-                                            id="outlined-multiline-static"
-                                            label="Comments (*optional)"
-                                            multiline
-                                            rows={5}
-                                            value={this.state.comments}
-                                            onChange={(e) => this.handleChange('question', e.target.value)}
-                                            variant="outlined"
-                                            fullWidth={true}
-                                            inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                                            margin=""
-                                        /></Box>
-                                    </Grid>
-                                    <Grid item lg={12} sm={12} xs={12}>
-                                        <div style={{ marginTop: 20, width: '90%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
-                                    </Grid>
-                                </Grid>
-                                <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
-                            </CardActions>
-                        </Grid>
-                    </Grid>
+                                    <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
+                                </CardActions>
+                            </Grid>
+                        </Grid>}
+
                 </Card>
                 <FooterComponent />
             </Box >

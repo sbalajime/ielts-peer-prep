@@ -8,7 +8,7 @@ function Alert(props) {
 
 const CustomSnackBar = (props) => {
     return (
-        <Snackbar open={props.open} autoHideDuration={props.duration || 2000} onClose={props.handleClose || (() => { })}>
+        <Snackbar open={props.open} autoHideDuration={props.duration || 3000} onClose={props.handleClose || (() => { })}>
             <Alert onClose={props.handleClose || (() => { })} severity={props.type}>
                 {props.message}
             </Alert>

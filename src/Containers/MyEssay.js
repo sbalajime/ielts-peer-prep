@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-
+import Loader from '../Components/Loader';
 import { getData } from '../Utils/Api';
 
 const useStyles = (theme) => ({
@@ -42,6 +42,8 @@ const useStyles = (theme) => ({
     },
     sliderRow: {
         margin: '10px 0'
+    }, answer: {
+        whiteSpace: 'pre-line'
     }
 })
 
@@ -62,7 +64,7 @@ const ReviewRow = (props) => {
             </Typography>
             </Grid>
             <Grid item lg={4} sm={4} xs={4} className={classes.slideLabel}>
-                <Typography variant="h5" component="h2" >
+                <Typography variant="h5" component="h2" className={classes.answer}>
                     {value}
                 </Typography>
             </Grid>
@@ -90,12 +92,11 @@ class MyEssay extends Component {
             snackBarMessage: '',
             snackBarType: '',
             review: [],
-            essay: ""
+            essay: "", loading: true
         }
     }
 
     componentDidMount() {
-        console.log(this.props)
         getData(`/review/${this.props.match.params.id}`, this.handleReviewResp);
         getData(`/essay/${this.props.match.params.id}`, this.handleEssayResp)
     }
@@ -111,7 +112,6 @@ class MyEssay extends Component {
 
     handleReviewResp = (resp) => {
         if (resp.status == 'success') {
-            console.log(resp)
             if (resp.rows.reviews.length === 0 || !resp.rows.reviewedbyme) {
                 this.props.history.push(`/`)
             }
@@ -130,7 +130,6 @@ class MyEssay extends Component {
     render() {
         const { classes } = this.props;
         const { review, essay } = this.state;
-        console.log(essay)
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>

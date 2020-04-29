@@ -89,7 +89,6 @@ class Login extends React.Component {
 
         const { email, password, error: { email: emailError, password: passError }, apiError, apiErrMessage } = this.state;
         const { classes } = this.props;
-        console.log(this.state)
         return (
             <Box display="flex">
                 <Grid container spacing={0} alignItems="center"

@@ -12,7 +12,7 @@ import Dropdown from '../Components/Dropdown';
 import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api'
 import SnackBar from '../Components/SnackBar';
-
+import Loader from '../Components/Loader';
 
 const useStyles = (theme) => ({
     root: {
@@ -23,13 +23,19 @@ const useStyles = (theme) => ({
     card: {
         flexGrow: 1,
         padding: theme.spacing(3),
+        alignItems: 'center',
+        display: 'flex', flexDirection: 'column',
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(1)
         }
     }, form: {
         margin: theme.spacing(2),
+        maxWidth: 700,
+        flexGrow: 1,
         [theme.breakpoints.down('sm')]: {
             margin: theme.spacing(1)
+        }, [theme.breakpoints.up('sm')]: {
+            width: 700
         }
     },
     button: {
@@ -37,6 +43,12 @@ const useStyles = (theme) => ({
     },
     taskSelector: {
         width: 200
+    },
+    selectContainer: {
+        '& > *': {
+            marginRight: 20
+        }
+
     }
 });
 
@@ -60,8 +72,7 @@ class Essay extends Component {
             currentWords: 0,
             task: '',
             startTimer: false,
-            apiError: false,
-            apiErrMessage: ""
+            showSnackBar: false, snackBarMsg: '', snackBarType: '', loading: false
         }
     }
 
@@ -102,17 +113,15 @@ class Essay extends Component {
     }
 
     afterPost = (resp) => {
-        if (resp.status === 'success') {
-            //const { data } = resp;
-            //if (data) {
-            this.setState({ question: "", answer: "", task: "" })
-            //}
-
-        } else {
-            this.setState({ apiError: true, apiErrMessage: resp.msg })
-        }
-
-
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Submitted Successfully', snackBarType: 'success' });
+            } else if (resp.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
+            }
+        });
     }
 
     handleSnackBarClose = (event, reason) => {
@@ -125,59 +134,76 @@ class Essay extends Component {
     handleClick = () => {
         const { answer, question, task, type } = this.state
         const body = { essay: answer, task, question, type }
-        postData(`/essay`, body, this.afterPost)
+        this.setState({ loading: true }, () => postData(`/essay`, body, this.afterPost));
     }
 
     handleSelectChange = (e) => {
         const { name, value } = e.target
         this.setState({ [name]: value })
     }
+
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ showSnackBar: false }, () => {
+            const { snackBarMsg } = this.state;
+            if (snackBarMsg && snackBarMsg.match(/success/i) && snackBarMsg.match(/success/i).length) {
+                this.props.history.push(`/`)
+            }
+        });
+    }
     render() {
 
         const { classes } = this.props;
-        const { minimumWords, duration, timer, currentWords, answer, type, task, startTimer, apiErrMessage, apiError } = this.state;
+        const { minimumWords, duration, timer, loading, currentWords, answer, type, task, startTimer, apiErrMessage, apiError, question, showSnackBar, snackBarType, snackBarMsg } = this.state;
 
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
-                    <Box margin={3} className={classes.form}>
-                        <Dropdown name={"task"} value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
-                        <Dropdown name={"type"} value={type} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Academic', value: 'Academic' }, { label: 'General', value: 'General' }]} label="Select Type" />
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Question"
-                            multiline
-                            rows={5}
-                            value={this.state.question}
-                            onChange={(e) => this.handleChange('question', e.target.value)}
-                            variant="outlined"
-                            fullWidth={true}
-                            inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                            margin="normal"
-                        />
-                        {startTimer ?
-                            <div>
-                                <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
-                                    <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
-                                    <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
-                                </Box>
-                                <TextField
-                                    id="outlined-multiline-static"
-                                    label="Answer"
-                                    multiline
-                                    rows={20}
-                                    value={this.state.answer}
-                                    onChange={(e) => this.handleChange('answer', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth={true}
-                                    inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                                    margin="normal"
-                                />
-                                <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
-                            </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })}>Start Timer</Button></div>}
-                        <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
-                    </Box>
+                    {loading ? <Loader /> : <Box display="flex" flexDirection="row" justifyContent="center">
+                        <Box margin={3} className={classes.form}>
+                            <Box display="flex" flexDirection="row" className={classes.selectContainer}>
+                                <Dropdown name={"task"} value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
+                                <Dropdown name={"type"} value={type} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Academic', value: 'Academic' }, { label: 'General', value: 'General' }]} label="Select Type" />
+                            </Box>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Question"
+                                multiline
+                                rows={5}
+                                value={this.state.question}
+                                onChange={(e) => this.handleChange('question', e.target.value)}
+                                variant="outlined"
+                                fullWidth={true}
+                                inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                margin="normal"
+                            />
+                            {startTimer ?
+                                <div>
+                                    <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
+                                        <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
+                                        <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
+                                    </Box>
+                                    <TextField
+                                        id="outlined-multiline-static"
+                                        label="Answer"
+                                        multiline
+                                        rows={20}
+                                        value={this.state.answer}
+                                        onChange={(e) => this.handleChange('answer', e.target.value)}
+                                        variant="outlined"
+                                        fullWidth={true}
+                                        inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                        margin="normal"
+                                    />
+                                    <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
+                                </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })} disabled={!(task && type && question)}>Start Timer</Button></div>}
+                            <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
+                        </Box>
+                    </Box>}
+
                 </Paper>
                 <FooterComponent />
             </Box >)
