@@ -43,18 +43,18 @@ const BootstrapInput = withStyles((theme) => ({
 
 
 const Dropdown = (props) => {
-    const { value, handleSelectChange, className, label, options } = props;
+    const { value, handleSelectChange, className, label, options, name } = props;
     return (
         <div>
-            <InputLabel id="ask-selector">{label}</InputLabel>
+            <InputLabel variant="outlined" id="task-selector">{label}</InputLabel>
             <Select
                 className={className}
                 labelId="task-selector"
                 id="demo-customized-select"
                 value={value}
+                name={name}
                 onChange={handleSelectChange}
-                input={<BootstrapInput />}
-            >
+                input={<BootstrapInput />}            >
                 {options.map((a, key) => {
                     return <MenuItem key={key} value={a.value}>{a.label}</MenuItem>
                 })}

@@ -47,6 +47,7 @@ class Essay extends Component {
         super(props);
         this.state = {
             task: '',
+            type: '',
             question: '',
             answer: '',
             duration: 0,
@@ -106,6 +107,7 @@ class Essay extends Component {
             //if (data) {
             this.setState({ question: "", answer: "", task: "" })
             //}
+
         } else {
             this.setState({ apiError: true, apiErrMessage: resp.msg })
         }
@@ -121,25 +123,27 @@ class Essay extends Component {
     }
 
     handleClick = () => {
-        const { answer, question, task } = this.state
-        const body = { essay: answer, task, question }
+        const { answer, question, task, type } = this.state
+        const body = { essay: answer, task, question, type }
         postData(`/essay`, body, this.afterPost)
     }
 
     handleSelectChange = (e) => {
-        this.setState({ task: e.target.value })
+        const { name, value } = e.target
+        this.setState({ [name]: value })
     }
     render() {
+
         const { classes } = this.props;
-        const { minimumWords, duration, timer, currentWords, answer, task, startTimer, apiErrMessage, apiError } = this.state;
+        const { minimumWords, duration, timer, currentWords, answer, type, task, startTimer, apiErrMessage, apiError } = this.state;
 
         return (
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
                     <Box margin={3} className={classes.form}>
-                        <Dropdown value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
-
+                        <Dropdown name={"task"} value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
+                        <Dropdown name={"type"} value={type} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Academic', value: 'Academic' }, { label: 'General', value: 'General' }]} label="Select Type" />
                         <TextField
                             id="outlined-multiline-static"
                             label="Question"
