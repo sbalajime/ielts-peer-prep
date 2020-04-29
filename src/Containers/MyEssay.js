@@ -4,11 +4,13 @@ import Paper from '@material-ui/core/Paper';
 
 import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
+import SnackBar from '../Components/SnackBar'
+import Loader from '../Components/Loader';
+
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import Loader from '../Components/Loader';
 import { getData } from '../Utils/Api';
 
 const useStyles = (theme) => ({
@@ -92,48 +94,61 @@ class MyEssay extends Component {
             snackBarMessage: '',
             snackBarType: '',
             review: [],
-            essay: "", loading: true
+            essay: "", loading: false,
+            showSnackBar: false,
+            snackBarType: "",
+            snackBarMsg: ""
         }
     }
 
     componentDidMount() {
-        getData(`/review/${this.props.match.params.id}`, this.handleReviewResp);
-        getData(`/essay/${this.props.match.params.id}`, this.handleEssayResp)
+        const loading = this.state
+        this.setState({ loading: true }, () => {
+            getData(`/review/${this.props.match.params.id}`, this.handleReviewResp);
+        })
+        this.setState({ loading: true }, () => {
+            getData(`/essay/${this.props.match.params.id}`, this.handleEssayResp)
+        })
     }
 
 
     handleEssayResp = (resp) => {
-        if (resp.status == 'success') {
-            this.setState({ essay: resp.rows[0], showSnackBar: true, snackBarMsg: 'Review given Successfully', snackBarType: 'success' })
-        } else {
-            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
-        }
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                this.setState({ essay: resp.rows[0] })
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+            }
+        })
     }
 
     handleReviewResp = (resp) => {
-        if (resp.status == 'success') {
-            if (resp.rows.reviews.length === 0 || !resp.rows.reviewedbyme) {
-                this.props.history.push(`/`)
-            }
-            else {
-                this.setState({
-                    review: resp.rows.reviews, showSnackBar: true, snackBarMsg: 'Your Score', snackBarType: 'success'
-                })
-            }
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                if (resp.rows.reviews.length === 0 || !resp.rows.reviewedbyme) {
+                    this.props.history.push(`/`)
+                }
+                else {
+                    this.setState({
+                        review: resp.rows.reviews
+                    })
+                }
 
-        } else {
-            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
-        }
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+            }
+        })
 
     }
 
     render() {
         const { classes } = this.props;
-        const { review, essay } = this.state;
+        const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading } = this.state;
+
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
-                <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
+                {loading ? <Loader /> : <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
                     <Grid item lg={6} sm={12} xs={12} >
                         <Box display="flex" flexDirection="column" alignItems="center"><Box className={classes.essaySection}>
                             <Typography variant="h5" component="h2" gutterBottom>
@@ -154,8 +169,9 @@ class MyEssay extends Component {
                             </Paper>
                         </Box>
                     </Grid>
-                </Grid>
+                </Grid>}
             </Paper>
+            <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
             <FooterComponent />
         </Box >)
     }
