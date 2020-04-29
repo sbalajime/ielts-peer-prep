@@ -104,6 +104,8 @@ class Review extends Component {
         if (res.status == 'success') {
             if (res.rows.length === 0)
                 this.props.history.push('/')
+            else if (res.rows[0].reviewedbyme)
+                this.props.history.push('/')
             else {
                 const { answer, question, task } = res.rows[0];
                 this.setState({

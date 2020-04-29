@@ -114,7 +114,8 @@ class MyEssay extends Component {
             console.log(resp)
             if (resp.rows.length === 0) {
                 this.props.history.push(`/`)
-            } else {
+            }
+            else {
                 this.setState({
                     review: resp.rows, showSnackBar: true, snackBarMsg: 'Your Score', snackBarType: 'success'
                 })
