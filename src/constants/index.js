@@ -8,4 +8,13 @@ const values = {
     API_URL: isLocalHost ? 'http://localhost:5000' : 'https://ielts-peer-prep.herokuapp.com'
 }
 
+
+export const wordCount = (answer) => {
+    let currentWords = 0;
+    if (typeof (answer) == 'undefined')
+        return 0;
+    else
+        return currentWords = answer.trim().replace(/\n/g, ' ').split(' ').length;
+}
+
 export default values;

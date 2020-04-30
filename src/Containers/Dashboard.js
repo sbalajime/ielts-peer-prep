@@ -84,9 +84,11 @@ class Dashboard extends Component {
     render() {
         const { classes } = this.props;
         const { essays, loading } = this.state;
+
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
+
                 <Paper elevation={3} className={classes.card}>
                     {loading ? <Loader /> : <Box className={classes.cardContainer}>
                         {essays.map((essay, index) => <EssayCard key={index} {...essay} />)}

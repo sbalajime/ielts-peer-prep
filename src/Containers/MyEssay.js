@@ -7,11 +7,15 @@ import FooterComponent from '../Components/Footer';
 import SnackBar from '../Components/SnackBar'
 import Loader from '../Components/Loader';
 
+
+
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import { getData } from '../Utils/Api';
+import Chip from '@material-ui/core/Chip'
+import { wordCount } from '../constants/index'
 
 const useStyles = (theme) => ({
     card: {
@@ -24,6 +28,7 @@ const useStyles = (theme) => ({
     },
     answer: {
         fontSize: 16
+
     },
     divider: {
         marginTop: theme.spacing(2),
@@ -45,6 +50,8 @@ const useStyles = (theme) => ({
     sliderRow: {
         margin: '10px 0'
     }, answer: {
+        marginTop: "25px",
+        lineHeight: '1.6',
         whiteSpace: 'pre-line'
     }
 })
@@ -97,7 +104,8 @@ class MyEssay extends Component {
             essay: "", loading: false,
             showSnackBar: false,
             snackBarType: "",
-            snackBarMsg: ""
+            snackBarMsg: "",
+            words: ""
         }
     }
 
@@ -125,7 +133,8 @@ class MyEssay extends Component {
     handleReviewResp = (resp) => {
         this.setState({ loading: false }, () => {
             if (resp.status == 'success') {
-                if (resp.rows.reviews.length === 0 || !resp.rows.reviewedbyme) {
+                console.log(resp.rows)
+                if (typeof (resp.rows.reviews) == 'undefined') {
                     this.props.history.push(`/`)
                 }
                 else {
@@ -141,10 +150,12 @@ class MyEssay extends Component {
 
     }
 
+
+
+
     render() {
         const { classes } = this.props;
         const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading } = this.state;
-
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
@@ -154,6 +165,7 @@ class MyEssay extends Component {
                             <Typography variant="h5" component="h2" gutterBottom>
                                 {essay.question}
                             </Typography>
+                            <Chip size="small" label={`Only ${wordCount(essay.answer)}  words in answer`} color='primary' />
                             <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
                                 {essay.answer}
                             </Typography>

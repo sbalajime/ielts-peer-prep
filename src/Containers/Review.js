@@ -15,7 +15,8 @@ import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
 import SnackBar from '../Components/SnackBar';
 import Loader from '../Components/Loader';
-
+import Chip from '@material-ui/core/Chip'
+import { wordCount } from '../constants/index'
 import { getData, postData } from '../Utils/Api';
 
 const useStyles = (theme) => ({
@@ -103,9 +104,10 @@ class Review extends Component {
     }
 
     processData = (res) => {
+        console.log(res.rows[0])
         this.setState({ loading: false }, () => {
             if (res.status == 'success') {
-                if (res.rows.length === 0 || res.rows[0].reviewedbyme)
+                if (typeof (res.rows[0]) === 'undefined' || res.rows[0].reviewedbyme)
                     this.props.history.push('/')
                 else {
                     const { answer, question, task } = res.rows[0];
@@ -175,19 +177,19 @@ class Review extends Component {
                 <Card className={classes.root}>
                     {loading ? <Loader /> :
                         <Grid container spacing={2}>
-
                             <Grid item xs={12} sm={12} lg={6} spacing={2}>
                                 <CardContent>
                                     <Typography variant="h5" component="h2" gutterBottom>
                                         Question
-                        </Typography>
-                                    <Typography variant="body2" component="p" gutterBottom>
+                                    </Typography>
+                                    <Typography variant="body1" component="p" gutterBottom>
                                         {question}
                                     </Typography>
+                                    <Chip size="small" label={`Only ${wordCount(answer)} words in answer`} color='primary' />
                                     <Divider className={classes.divider} />
                                     <Typography variant="h5" component="h2" gutterBottom>
                                         Answer
-                        </Typography>
+                                    </Typography>
                                     <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
                                         {answer}
                                     </Typography>
