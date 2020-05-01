@@ -6,6 +6,7 @@ import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
 import SnackBar from '../Components/SnackBar'
 import Loader from '../Components/Loader';
+import Comment from '../Components/Comment';
 
 
 
@@ -21,7 +22,9 @@ const useStyles = (theme) => ({
     card: {
         width: 'auto',
         padding: theme.spacing(3),
-        flexGrow: 1,
+        flexGrow: 1, display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(1)
         }
@@ -35,24 +38,35 @@ const useStyles = (theme) => ({
         marginBottom: theme.spacing(2)
     },
     reviewSection: {
-        width: '100%'
+        width: '100%', padding: theme.spacing(3), margin: theme.spacing(2)
     },
     essaySection: {
-        padding: theme.spacing(3),
-        maxWidth: 500
+        maxWidth: 500,
+        marginBottom: theme.spacing(2)
     }, reviewWrapper: {
-        padding: theme.spacing(3)
+        marginBottom: theme.spacing(3)
+
     },
     slideLabel: {
         display: 'flex',
         alignItems: 'center'
     },
+    slideValue: {
+        textAlign: 'right', display: 'flex',
+        alignItems: 'center'
+    },
     sliderRow: {
-        margin: '10px 0'
+        padding: theme.spacing(2),
     }, answer: {
         marginTop: "25px",
         lineHeight: '1.6',
         whiteSpace: 'pre-line'
+    },
+    pageWrapper: {
+        maxWidth: 1200
+    },
+    bandHeader: {
+        marginBottom: theme.spacing(2)
     }
 })
 
@@ -68,12 +82,12 @@ const ReviewRow = (props) => {
     const { classes, label, value } = props;
     return (
         <Grid container spacing={1} className={classes.sliderRow} >
-            <Grid item lg={8} sm={8} xs={8} className={classes.slideLabel}><Typography variant="h5" component="h2" >
+            <Grid item lg={8} sm={8} xs={8} className={classes.slideLabel}><Typography component="p" >
                 {label}
             </Typography>
             </Grid>
-            <Grid item lg={4} sm={4} xs={4} className={classes.slideLabel}>
-                <Typography variant="h5" component="h2" className={classes.answer}>
+            <Grid item lg={4} sm={4} xs={4} className={classes.slideValue}>
+                <Typography component="p" >
                     {value}
                 </Typography>
             </Grid>
@@ -90,7 +104,20 @@ const ReviewRow = (props) => {
 
 
 let comments = [{
-    fullName: "Balaji S"
+    fullName: "Balaji S",
+    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
+}, {
+    fullName: "Balaji S",
+    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
+}, {
+    fullName: "Balaji S",
+    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
+}, {
+    fullName: "Balaji S",
+    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
+}, {
+    fullName: "Balaji S",
+    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
 }]
 class MyEssay extends Component {
 
@@ -159,29 +186,38 @@ class MyEssay extends Component {
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
-                {loading ? <Loader /> : <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
-                    <Grid item lg={6} sm={12} xs={12} >
-                        <Box display="flex" flexDirection="column" alignItems="center"><Box className={classes.essaySection}>
-                            <Typography variant="h5" component="h2" gutterBottom>
-                                {essay.question}
-                            </Typography>
-                            <Chip size="small" label={`Only ${wordCount(essay.answer)}  words in answer`} color='primary' />
-                            <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
-                                {essay.answer}
-                            </Typography>
-                        </Box></Box>
-                    </Grid>
-                    <Grid item lg={6} sm={12} xs={12} >
-                        <Box height="100%" display="flex" flexDirection="column" justifyContent="center">
-                            <Paper elevation={3} className={classes.reviewWrapper}>
-                                {review.map((row, index) => <Fragment key={index}>
-                                    <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
-                                    <Divider />
-                                </Fragment>)}
-                            </Paper>
-                        </Box>
-                    </Grid>
-                </Grid>}
+                <Box className={classes.pageWrapper}>
+                    {loading ? <Loader /> : <Grid container spacing={{ lg: 5, sm: 5, xs: 2 }}>
+                        <Grid item lg={6} sm={12} xs={12} >
+                            <Box display="flex" flexDirection="column" alignItems="center"><Box className={classes.essaySection}>
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    {essay.question}
+                                </Typography>
+                                <Chip size="small" label={`Words: ${wordCount(essay.answer)}`} color='primary' />
+                                <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                    {essay.answer}
+                                </Typography>
+                            </Box></Box>
+                        </Grid>
+                        <Grid item lg={6} sm={12} xs={12} >
+                            <Box height="100%" classes={classes.reviewSection} >
+                                <Typography variant="h5" component="h5" gutterBottom className={classes.bandHeader}>
+                                    Band Descriptors
+                                </Typography>
+                                <Paper elevation={3} className={classes.reviewWrapper}>
+                                    {review.map((row, index) => <Fragment key={index}>
+                                        <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
+                                        <Divider />
+                                    </Fragment>)}
+                                </Paper>
+                                <Typography variant="h5" component="h5" gutterBottom >
+                                    Comments
+                                </Typography>
+                                {comments.map((row, i) => <Comment key={i} value={row.comment} fullName={row.fullName} />)}
+                            </Box>
+                        </Grid>
+                    </Grid>}
+                </Box>
             </Paper>
             <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
             <FooterComponent />
