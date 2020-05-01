@@ -5,10 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
 import Loader from '../Components/Loader';
-
+import Dropdown from '../Components/Dropdown'
 import EssayCard from '../Components/EssayCard';
 
 import { getData } from '../Utils/Api';
+import Essay from './Essay';
 
 
 const useStyles = (theme) => ({
@@ -65,7 +66,8 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            essays: [], loading: false
+            essays: [], loading: false,
+            filterEssays: []
         }
     }
     componentDidMount() {
@@ -79,19 +81,34 @@ class Dashboard extends Component {
                 this.setState({ essays: res.rows })
             }
         })
+    }
+
+    handleSelectChange = e => {
+        const { essays } = this.state
+        if (e.target.value === 'all') {
+            this.setState({ filterEssays: essays })
+        } else {
+            let filterEssay = essays.filter((essay) => {
+                console.log(essay)
+                return essay.submittedbyme === e.target.value
+            })
+            this.setState({ filterEssays: filterEssay })
+        }
 
     }
+
+
     render() {
         const { classes } = this.props;
-        const { essays, loading } = this.state;
-
+        const { filterEssays, Essays, loading } = this.state;
+        console.log(Essays, filterEssays)
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
-
                 <Paper elevation={3} className={classes.card}>
+                    <Dropdown name={"submittedby"} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Me', value: true }, { label: 'Other', value: false }, { label: 'All', value: 'all' }]} label="Submitted By" />
                     {loading ? <Loader /> : <Box className={classes.cardContainer}>
-                        {essays.map((essay, index) => <EssayCard key={index} {...essay} />)}
+                        {filterEssays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>}
                 </Paper>
                 <FooterComponent />

@@ -32,7 +32,7 @@ const AppBarComponent = () => {
             <Drawer history={history} />
             <Typography variant="h6" className={classes.title}>
                 IELTS Peer Prep
-    </Typography>
+            </Typography>
             <Tooltip title="Logout" aria-label="logout" arrow><Button color="inherit" onClick={handleLogout}><ExitToAppIcon fontSize="large" /></Button></Tooltip>
 
         </Toolbar>
