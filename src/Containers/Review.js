@@ -145,7 +145,6 @@ class Review extends Component {
 
     handleClick = () => {
         const { sliders, comment } = this.state;
-<<<<<<< HEAD
         if (Object.keys(sliders).length !== 4 || (comment.length == 0)) {
             console.log()
             this.setState({ showSnackBar: true, snackBarMsg: 'Please select all band selectors and give comments.', snackBarType: 'error' });
@@ -153,9 +152,6 @@ class Review extends Component {
             this.setState({ loading: true }, () => postData('/review', { sliders, essayId: this.props.match.params.id, comment }, this.handleReviewResp))
         }
 
-=======
-        this.setState({ loading: true }, () => postData('/review', { sliders, comment, essayId: this.props.match.params.id }, this.handleReviewResp))
->>>>>>> 6efa17b795bbbb21182bcec773526f1a97db396b
     }
 
     handleReviewResp = (resp) => {
@@ -229,20 +225,12 @@ class Review extends Component {
                                         </Grid>
                                         <Grid item lg={12} sm={12} xs={12}>
                                             <Box className={classes.comments}><TextField
-<<<<<<< HEAD
                                                 id="outlined-multiline-static"
                                                 label="Comments *"
                                                 multiline
                                                 rows={10}
                                                 value={this.state.comments}
                                                 onChange={this.handleChange}
-=======
-                                                label="Comment"
-                                                multiline
-                                                rows={5}
-                                                value={comment}
-                                                onChange={(e) => this.handleValueChange('comment', e.target.value)}
->>>>>>> 6efa17b795bbbb21182bcec773526f1a97db396b
                                                 variant="outlined"
                                                 fullWidth={true}
                                                 //inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
