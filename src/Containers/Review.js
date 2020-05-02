@@ -220,9 +220,9 @@ class Review extends Component {
                                         <Grid item lg={12} sm={12} xs={12}>
                                             <Box className={classes.comments}><TextField
                                                 id="outlined-multiline-static"
-                                                label="Comments (*optional)"
+                                                label="Comments *"
                                                 multiline
-                                                rows={5}
+                                                rows={10}
                                                 value={this.state.comments}
                                                 onChange={this.handleChange}
                                                 variant="outlined"
