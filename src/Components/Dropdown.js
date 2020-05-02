@@ -43,10 +43,10 @@ const BootstrapInput = withStyles((theme) => ({
 
 
 const Dropdown = (props) => {
-    const { value, handleSelectChange, className, label, options, name } = props;
+    const { value, handleSelectChange, className, label, labelClass, options, name } = props;
     return (
         <div>
-            <InputLabel variant="outlined" id="task-selector">{label}</InputLabel>
+            <InputLabel className={labelClass} variant="outlined" id="task-selector">{label}</InputLabel>
             <Select
                 className={className}
                 labelId="task-selector"

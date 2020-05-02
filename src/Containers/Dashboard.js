@@ -9,7 +9,6 @@ import Dropdown from '../Components/Dropdown'
 import EssayCard from '../Components/EssayCard';
 
 import { getData } from '../Utils/Api';
-import Essay from './Essay';
 
 
 const useStyles = (theme) => ({
@@ -44,6 +43,18 @@ const useStyles = (theme) => ({
     title: {
         flexGrow: 1,
     },
+    taskSelector: {
+        width: 100,
+        height: 30,
+        marginLeft: '7px',
+        marginBottom: theme.spacing(2)
+
+    },
+    label: {
+        color: '#000',
+        marginBottom: theme.spacing(.5),
+        marginLeft: '-5px'
+    },
     cardContainer: {
         display: 'flex',
         flexDirection: 'row',
@@ -67,7 +78,8 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             essays: [], loading: false,
-            filterEssays: []
+            filterEssays: [],
+            submit: "all"
         }
     }
     componentDidMount() {
@@ -78,35 +90,41 @@ class Dashboard extends Component {
     handleEssays = (res) => {
         this.setState({ loading: false }, () => {
             if (res.status === 'success') {
-                this.setState({ essays: res.rows })
+                this.setState({ essays: res.rows, filterEssays: res.rows })
             }
         })
     }
 
-    handleSelectChange = e => {
-        const { essays } = this.state
-        if (e.target.value === 'all') {
-            this.setState({ filterEssays: essays })
-        } else {
-            let filterEssay = essays.filter((essay) => {
-                console.log(essay)
-                return essay.submittedbyme === e.target.value
-            })
-            this.setState({ filterEssays: filterEssay })
-        }
 
+    handleSelectChange = (e) => {
+        const { name, value } = e.target
+        this.setState({ [name]: value },
+            () => {
+                const { essays, submit } = this.state
+                if (submit === 'all') {
+                    this.setState({ filterEssays: essays })
+                } else {
+                    let filterEssay = essays.filter((essay) => {
+
+                        return essay.submittedbyme.toString() === submit
+                    })
+                    this.setState({ filterEssays: filterEssay })
+                }
+
+            })
     }
+
+
 
 
     render() {
         const { classes } = this.props;
-        const { filterEssays, Essays, loading } = this.state;
-        console.log(Essays, filterEssays)
+        const { filterEssays, submit, loading } = this.state;
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
-                    <Dropdown name={"submittedby"} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Me', value: true }, { label: 'Other', value: false }, { label: 'All', value: 'all' }]} label="Submitted By" />
+                    <Dropdown value={submit} name={"submit"} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Me', value: 'true' }, { label: 'Other', value: 'false' }, { label: 'All', value: 'all' }]} label="Submitted By" labelClass={classes.label} />
                     {loading ? <Loader /> : <Box className={classes.cardContainer}>
                         {filterEssays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>}
