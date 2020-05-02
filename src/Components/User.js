@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { getData } from '../Utils/Api'
 
-import Typography from '@material-ui/core/Typography'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { Typography, makeStyles } from '@material-ui/core/'
+
+
+const useStyles = makeStyles({
+    small: {
+        display: "inline",
+        width: '25px',
+        height: '25px',
+    }
+});
 
 function User() {
-
+    const classes = useStyles();
     const [user, userChange] = useState([])
 
     const processUser = (res) => {
@@ -21,10 +31,13 @@ function User() {
     )
 
 
+
     return (
-        <Typography >
-            Welcome {user}
-        </Typography>
+
+        <React.Fragment>
+            <AccountCircleIcon />
+            <Typography >{user}</Typography>
+        </React.Fragment >
     )
 
 
