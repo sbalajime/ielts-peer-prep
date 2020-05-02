@@ -31,7 +31,7 @@ const useStyles = (theme) => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        display: 'flex', flexDirection: 'column'
+        display: 'flex', flexDirection: 'column', alignItems: 'center'
     },
     bullet: {
         display: 'inline-block',
@@ -58,6 +58,13 @@ const useStyles = (theme) => ({
         },
     }, answer: {
         whiteSpace: 'pre-line'
+    }, pageWrapper: {
+        maxWidth: 1200,
+        [theme.breakpoints.down('md')]: {
+            maxWidth: 600
+        }
+    }, reviewSection: {
+        height: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center'
     }
 });
 
@@ -93,7 +100,7 @@ class Review extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            comments: '',
+            comment: '',
             sliders: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '', loading: false
         }
     }
@@ -132,8 +139,14 @@ class Review extends Component {
     }
 
     handleClick = () => {
-        const { sliders } = this.state;
-        this.setState({ loading: true }, () => postData('/review', { sliders, essayId: this.props.match.params.id }, this.handleReviewResp))
+        const { sliders, comment } = this.state;
+        if (Object.keys(sliders).length !== 4 || (comment.length == 0)) {
+            console.log()
+            this.setState({ showSnackBar: true, snackBarMsg: 'Please select all band selectors and give comments.', snackBarType: 'error' });
+        } else {
+            this.setState({ loading: true }, () => postData('/review', { sliders, essayId: this.props.match.params.id, comment }, this.handleReviewResp))
+        }
+
     }
 
     handleReviewResp = (resp) => {
@@ -162,7 +175,9 @@ class Review extends Component {
         });
     }
 
+    handleChange = (e) => this.setState({ comment: e.target.value })
     render() {
+        console.log('state', this.state);
         const { classes } = this.props;
         const { question, answer, task, sliders, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
         let bandDescriptors = [
@@ -176,7 +191,7 @@ class Review extends Component {
                 <AppBarComponent />
                 <Card className={classes.root}>
                     {loading ? <Loader /> :
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2} className={classes.pageWrapper}>
                             <Grid item xs={12} sm={12} lg={6} spacing={2}>
                                 <CardContent>
                                     <Typography variant="h5" component="h2" gutterBottom>
@@ -185,7 +200,7 @@ class Review extends Component {
                                     <Typography variant="body1" component="p" gutterBottom>
                                         {question}
                                     </Typography>
-                                    <Chip size="small" label={`Only ${wordCount(answer)} words in answer`} color='primary' />
+                                    <Chip size="small" label={`Words: ${wordCount(answer)}`} color='primary' />
                                     <Divider className={classes.divider} />
                                     <Typography variant="h5" component="h2" gutterBottom>
                                         Answer
@@ -196,7 +211,7 @@ class Review extends Component {
                                 </CardContent>
                             </Grid>
                             <Divider className={classes.divider} />
-                            <Grid item xs={12} sm={12} lg={6} spacing={2}>
+                            <Grid item xs={12} sm={12} lg={6} spacing={2} className={classes.reviewSection}>
                                 <CardActions>
                                     <Grid container>
                                         <Grid item lg={12} sm={12} xs={12}>
@@ -209,7 +224,7 @@ class Review extends Component {
                                                 multiline
                                                 rows={5}
                                                 value={this.state.comments}
-                                                onChange={(e) => this.handleChange('question', e.target.value)}
+                                                onChange={this.handleChange}
                                                 variant="outlined"
                                                 fullWidth={true}
                                                 inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
@@ -217,7 +232,7 @@ class Review extends Component {
                                             /></Box>
                                         </Grid>
                                         <Grid item lg={12} sm={12} xs={12}>
-                                            <div style={{ marginTop: 20, width: '90%', textAlign: 'right' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
+                                            <div style={{ marginTop: 20, width: '90%', textAlign: 'right' }}><Button variant="contained" color="primary" disabled={showSnackBar} classes={{ root: classes.button }} onClick={this.handleClick}>Submit Review</Button></div>
                                         </Grid>
                                     </Grid>
                                     <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
