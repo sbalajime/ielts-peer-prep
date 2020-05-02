@@ -114,7 +114,6 @@ class Login extends React.Component {
                                             Create a new account
                                         </Typography>
                                     </Link>
-                                    <div style={{ marginTop: 20, width: '100%' }}><Button variant="contained" color="primary" classes={{ root: classes.button }} onClick={() => this.props.history.push('/write')}>Write</Button></div>
                                     <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
                                 </Box>
                             </Paper>

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Fab } from '@material-ui/core';
 import AppBarComponent from '../Components/AppBar'
 import FooterComponent from '../Components/Footer';
 import Loader from '../Components/Loader';
 import Dropdown from '../Components/Dropdown'
 import EssayCard from '../Components/EssayCard';
+import EditIcon from '@material-ui/icons/Edit'
 
 import { getData } from '../Utils/Api';
 
@@ -30,7 +31,12 @@ const useStyles = (theme) => ({
         [theme.breakpoints.down('sm')]: {
             margin: theme.spacing(1)
         }
+    }, floatButton: {
+        position: "fixed",
+        bottom: '10%',
+        left: '4%'
     },
+
     button: {
         width: 'auto', textAlign: 'center'
     },
@@ -125,6 +131,9 @@ class Dashboard extends Component {
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
                     <Dropdown value={submit} name={"submit"} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Me', value: 'true' }, { label: 'Other', value: 'false' }, { label: 'All', value: 'all' }]} label="Submitted By" labelClass={classes.label} />
+                    <Fab size="medium" className={classes.floatButton} onClick={() => this.props.history.push('/write')} color="primary" aria-label="edit">
+                        <EditIcon />
+                    </Fab>
                     {loading ? <Loader /> : <Box className={classes.cardContainer}>
                         {filterEssays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>}
