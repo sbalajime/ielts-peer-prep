@@ -103,22 +103,7 @@ const ReviewRow = (props) => {
 // To conclude, the lives of people are drastically affected by advanced versions of technology yet, in my opinion, it will not be able to pose threat to the existence traditional newspaper and magazines.`
 
 
-let comments = [{
-    fullName: "Balaji S",
-    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
-}, {
-    fullName: "Balaji S",
-    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
-}, {
-    fullName: "Balaji S",
-    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
-}, {
-    fullName: "Balaji S",
-    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
-}, {
-    fullName: "Balaji S",
-    comment: "This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance.This is a long sentance"
-}]
+
 class MyEssay extends Component {
 
     constructor(props) {
@@ -132,7 +117,7 @@ class MyEssay extends Component {
             showSnackBar: false,
             snackBarType: "",
             snackBarMsg: "",
-            words: ""
+            words: "", comments: []
         }
     }
 
@@ -166,7 +151,7 @@ class MyEssay extends Component {
                 }
                 else {
                     this.setState({
-                        review: resp.rows.reviews
+                        review: resp.rows.reviews, comments: resp.rows.comments_arr
                     })
                 }
 
@@ -182,7 +167,7 @@ class MyEssay extends Component {
 
     render() {
         const { classes } = this.props;
-        const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading } = this.state;
+        const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading, comments } = this.state;
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
@@ -213,7 +198,7 @@ class MyEssay extends Component {
                                 <Typography variant="h5" component="h5" gutterBottom >
                                     Comments
                                 </Typography>
-                                {comments.map((row, i) => <Comment key={i} value={row.comment} fullName={row.fullName} />)}
+                                {comments.map((row, i) => <Comment key={i} value={row.comment} fullName={row.user_name} />)}
                             </Box>
                         </Grid>
                     </Grid>}
