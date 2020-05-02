@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory } from 'react-router-dom';
+import User from './User'
 
 const useStyles = makeStyles({
     title: {
@@ -18,21 +19,28 @@ const useStyles = makeStyles({
 
 
 
+
 const AppBarComponent = () => {
     const classes = useStyles();
     const history = useHistory();
-    const handleLogout = () => {
 
+
+
+    const handleLogout = () => {
         localStorage.removeItem('token');
         history.push('/');
 
     }
+
+
+
     return (<AppBar position="static">
         <Toolbar>
             <Drawer history={history} />
             <Typography variant="h6" className={classes.title}>
                 IELTS Peer Prep
             </Typography>
+            <User />
             <Tooltip title="Logout" aria-label="logout" arrow><Button color="inherit" onClick={handleLogout}><ExitToAppIcon fontSize="large" /></Button></Tooltip>
 
         </Toolbar>

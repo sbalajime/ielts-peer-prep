@@ -144,7 +144,7 @@ class MyEssay extends Component {
         this.setState({ loading: false }, () => {
             if (resp.status == 'success') {
                 console.log(resp.rows)
-                if (typeof (resp.rows.reviews) == 'undefined' || resp.rows.reviews == null) {
+                if (typeof (resp.rows) == 'undefined' || typeof (resp.rows.reviews) == 'undefined' || resp.rows.reviews == null) {
                     this.props.history.push(`/`)
                 }
                 else {

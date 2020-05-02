@@ -184,7 +184,7 @@ class Review extends Component {
     render() {
         console.log('state', this.state);
         const { classes } = this.props;
-        const { question, answer, comment, task, sliders, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
+        const { question, answer, comment, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
         let bandDescriptors = [
             'Task Achievement',
             'Coherence and Cohesion',
@@ -221,7 +221,7 @@ class Review extends Component {
                                 <CardActions>
                                     <Grid container>
                                         <Grid item lg={12} sm={12} xs={12}>
-                                            {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} id={row} handleChange={this.handleValueChange} />)}
+                                            {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleValueChange} />)}
                                         </Grid>
                                         <Grid item lg={12} sm={12} xs={12}>
                                             <Box className={classes.comments}><TextField
@@ -229,7 +229,7 @@ class Review extends Component {
                                                 label="Comments *"
                                                 multiline
                                                 rows={10}
-                                                value={this.state.comments}
+                                                value={comment}
                                                 onChange={this.handleChange}
                                                 variant="outlined"
                                                 fullWidth={true}
