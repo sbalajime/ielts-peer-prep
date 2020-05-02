@@ -93,7 +93,7 @@ class Review extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            comments: '',
+            comment: '',
             sliders: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '', loading: false
         }
     }
@@ -104,10 +104,9 @@ class Review extends Component {
     }
 
     processData = (res) => {
-        console.log(res.rows[0])
         this.setState({ loading: false }, () => {
             if (res.status == 'success') {
-                if (typeof (res.rows[0]) === 'undefined' || res.rows[0].reviewedbyme)
+                if (typeof (res.rows[0]) === 'undefined' || res.rows[0].reviewedbyme || res.rows[0].submittedbyme)
                     this.props.history.push('/')
                 else {
                     const { answer, question, task } = res.rows[0];
@@ -122,18 +121,24 @@ class Review extends Component {
         })
 
     }
-    handleSliderChange = (label, value) => {
-        this.setState({
-            sliders: {
-                ...this.state.sliders,
-                [label]: value
-            }
-        })
+    handleValueChange = (id, value) => {
+        if (id === 'comment') {
+            this.setState({ [id]: value })
+        }
+        else {
+            this.setState({
+                sliders: {
+                    ...this.state.sliders, [id]: value
+                }
+            })
+        }
+
+
     }
 
     handleClick = () => {
-        const { sliders } = this.state;
-        this.setState({ loading: true }, () => postData('/review', { sliders, essayId: this.props.match.params.id }, this.handleReviewResp))
+        const { sliders, comment } = this.state;
+        this.setState({ loading: true }, () => postData('/review', { sliders, comment, essayId: this.props.match.params.id }, this.handleReviewResp))
     }
 
     handleReviewResp = (resp) => {
@@ -164,13 +169,14 @@ class Review extends Component {
 
     render() {
         const { classes } = this.props;
-        const { question, answer, task, sliders, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
+        const { question, answer, comment, task, sliders, showSnackBar, snackBarMsg, snackBarType, loading } = this.state;
         let bandDescriptors = [
             'Task Achievement',
             'Coherence and Cohesion',
             'Lexical Resource',
             'Grammatical Range and Accuracy'
         ];
+        console.log(this.state)
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
@@ -200,19 +206,18 @@ class Review extends Component {
                                 <CardActions>
                                     <Grid container>
                                         <Grid item lg={12} sm={12} xs={12}>
-                                            {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} handleChange={this.handleSliderChange} />)}
+                                            {bandDescriptors.map((row, index) => <BandSlider key={index} classes={classes} label={row} id={row} handleChange={this.handleValueChange} />)}
                                         </Grid>
                                         <Grid item lg={12} sm={12} xs={12}>
                                             <Box className={classes.comments}><TextField
-                                                id="outlined-multiline-static"
-                                                label="Comments (*optional)"
+                                                label="Comment"
                                                 multiline
                                                 rows={5}
-                                                value={this.state.comments}
-                                                onChange={(e) => this.handleChange('question', e.target.value)}
+                                                value={comment}
+                                                onChange={(e) => this.handleValueChange('comment', e.target.value)}
                                                 variant="outlined"
                                                 fullWidth={true}
-                                                inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                                //inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
                                                 margin=""
                                             /></Box>
                                         </Grid>
