@@ -22,9 +22,7 @@ const useStyles = (theme) => ({
     card: {
         width: 'auto',
         padding: theme.spacing(3),
-        flexGrow: 1, display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
+        flexGrow: 1,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(1)
         }
@@ -63,7 +61,7 @@ const useStyles = (theme) => ({
         whiteSpace: 'pre-line'
     },
     pageWrapper: {
-        maxWidth: 1200
+        maxWidth: 1200, margin: 'auto'
     },
     bandHeader: {
         marginBottom: theme.spacing(2)
@@ -150,8 +148,19 @@ class MyEssay extends Component {
                     this.props.history.push(`/`)
                 }
                 else {
+                    let bandDescriptors = [
+                        'Task Achievement',
+                        'Coherence and Cohesion',
+                        'Lexical Resource',
+                        'Grammatical Range and Accuracy'
+                    ];
+                    let respReviews = resp.rows.reviews;
+                    let sortedReviews = [];
+                    bandDescriptors.map(key => {
+                        sortedReviews.push({ label: key, value: respReviews.filter(row => row.label = key)[0].value })
+                    })
                     this.setState({
-                        review: resp.rows.reviews, comments: resp.rows.comments_arr
+                        review: sortedReviews, comments: resp.rows.comments_arr
                     })
                 }
 
@@ -168,6 +177,8 @@ class MyEssay extends Component {
     render() {
         const { classes } = this.props;
         const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading, comments } = this.state;
+
+
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
             <AppBarComponent />
             <Paper elevation={3} className={classes.card}>
