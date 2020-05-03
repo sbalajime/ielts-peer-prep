@@ -60,6 +60,7 @@ const useStyles = (theme) => ({
         whiteSpace: 'pre-line'
     }, pageWrapper: {
         maxWidth: 1200,
+        padding: theme.spacing(1),
         [theme.breakpoints.down('md')]: {
             maxWidth: 600
         }

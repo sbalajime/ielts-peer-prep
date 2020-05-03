@@ -61,7 +61,7 @@ const useStyles = (theme) => ({
         whiteSpace: 'pre-line'
     },
     pageWrapper: {
-        maxWidth: 1200, margin: 'auto'
+        maxWidth: 1200, margin: 'auto', padding: theme.spacing(1)
     },
     bandHeader: {
         marginBottom: theme.spacing(2)
