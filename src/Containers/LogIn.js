@@ -12,7 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import CONSTANTS from '../constants';
 import { putData } from '../Utils/Api';
 import SnackBar from '../Components/SnackBar';
-
+import Loader from '../Components/Loader'
 
 
 
@@ -42,7 +42,7 @@ class Login extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "", error: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '' }
+        this.state = { email: "", password: "", error: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '', loading: false }
     }
 
     handleChange = (e) => {
@@ -50,20 +50,23 @@ class Login extends React.Component {
         this.setState({ [id]: value, error: { [id]: false } })
     }
 
-    handleLoginResp = (resp) => {
-        if (resp.status == 'success') {
-            const { data } = resp;
 
-            if (data) {
-                localStorage.setItem('token', data);
-                this.setState({ email: "", password: "" });
-                this.props.history.push('/')
+    handleLoginResp = (resp) => {
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                const { data } = resp;
+
+                if (data) {
+                    localStorage.setItem('token', data);
+                    this.setState({ email: "", password: "" });
+                    this.props.history.push('/')
+                }
+            } else if (resp.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
             }
-        } else if (resp.status == 'failed') {
-            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
-        } else {
-            this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
-        }
+        })
 
     }
 
@@ -84,13 +87,15 @@ class Login extends React.Component {
         } else if (!password.trim()) {
             this.setState({ error: { ...error, password: true } });
         } else {
-            putData(`/user/login`, { email, password }, this.handleLoginResp);
+            this.setState({ loading: true }, () => {
+                putData(`/user/login`, { email, password }, this.handleLoginResp);
+            })
         }
     }
 
     render() {
 
-        const { email, password, error: { email: emailError, password: passError }, showSnackBar, snackBarMsg, snackBarType } = this.state;
+        const { email, password, loading, error: { email: emailError, password: passError }, showSnackBar, snackBarMsg, snackBarType } = this.state;
         const { classes } = this.props;
         return (
             <Box display="flex">
@@ -103,7 +108,7 @@ class Login extends React.Component {
                     <Grid item lg={4} md={6} sm={8} xs={11} >
                         <Box height="auto" my="auto" mr={4}>
                             <Paper elevation={3} >
-                                <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
+                                {loading ? <Loader /> : <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
                                     <Typography variant="h4" gutterBottom>
                                         Login
                                     </Typography>
@@ -118,7 +123,7 @@ class Login extends React.Component {
                                         </Typography>
                                     </Link>
                                     <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
-                                </Box>
+                                </Box>}
                             </Paper>
                         </Box>
                     </Grid>

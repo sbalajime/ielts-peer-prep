@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api';
-
+import Loader from '../Components/Loader'
 import SnackBar from '../Components/SnackBar';
 
 
@@ -39,7 +39,7 @@ class Signup extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "", rpass: "", fullName: "", error: {}, apiError: false, apiErrMessage: '' }
+        this.state = { email: "", password: "", rpass: "", fullName: "", error: {}, apiError: false, apiErrMessage: '', loading: false }
     }
 
     handleChange = (e) => {
@@ -55,17 +55,18 @@ class Signup extends React.Component {
     }
 
     handleSignupResp = (resp) => {
-        if (resp.status == 'success') {
-            const { data } = resp;
-            if (data) {
-                localStorage.setItem('token', data);
-                this.setState({ email: "", password: "" });
-                this.props.history.push('/')
+        this.setState({ loading: false }, () => {
+            if (resp.status == 'success') {
+                const { data } = resp;
+                if (data) {
+                    localStorage.setItem('token', data);
+                    this.setState({ email: "", password: "" });
+                    this.props.history.push('/')
+                }
+            } else {
+                this.setState({ apiError: true, apiErrMessage: resp.msg })
             }
-        } else {
-            this.setState({ apiError: true, apiErrMessage: resp.msg })
-        }
-
+        })
     }
 
     handleClick = () => {
@@ -86,15 +87,17 @@ class Signup extends React.Component {
         } else if (!fullName) {
             this.setState({ error: { email: false, password: false, rpass: false, fullName: true } });
         } else {
-            this.setState({ error: {} })
-            postData(`/user/`, { email, password, fullName }, this.handleSignupResp);
+            this.setState({ error: {}, loading: true }, () => {
+                postData(`/user/`, { email, password, fullName }, this.handleSignupResp);
+            })
+
         }
     }
 
 
     render() {
 
-        const { email, password, rpass, apiErrMessage, apiError, fullName, error: { email: errEmail, password: errPassword, rpass: errRpass, fullName: errFullName } } = this.state;
+        const { email, password, rpass, apiErrMessage, apiError, fullName, error: { email: errEmail, password: errPassword, rpass: errRpass, fullName: errFullName }, loading } = this.state;
         const { classes } = this.props;
 
         return (
@@ -108,10 +111,10 @@ class Signup extends React.Component {
                     <Grid item lg={4} md={6} sm={8} xs={11} >
                         <Box height="auto" my="auto" mr={4}>
                             <Paper elevation={3} >
-                                <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
+                                {loading ? <Loader /> : <Box display="flex" flexDirection="column" bgcolor="background.paper" p={5} alignItems="center" textAlign="center">
                                     <Typography variant="h4" gutterBottom>
                                         SignUp
-                            </Typography>
+                                    </Typography>
                                     <form className={classes.root} noValidate autoComplete="off">
                                         <TextField type="text" id="fullName" label="Name" variant="outlined" size="small" error={errFullName} helperText={errFullName ? "Enter Full Name" : ""} value={fullName} onChange={this.handleChange} />
                                         <TextField type="email" id="email" label="Email" variant="outlined" size="small" error={errEmail} helperText={errEmail ? "Enter email" : ""} value={email} onChange={this.handleChange} />
@@ -124,7 +127,7 @@ class Signup extends React.Component {
                                             Already have an account
                                 </Typography>
                                     </Link>
-                                </Box>
+                                </Box>}
                             </Paper>
                         </Box>
                     </Grid>
