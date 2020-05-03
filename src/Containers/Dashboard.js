@@ -34,7 +34,7 @@ const useStyles = (theme) => ({
     }, floatButton: {
         position: "fixed",
         bottom: '10%',
-        left: '4%'
+        right: '5%'
     },
 
     button: {

@@ -164,10 +164,8 @@ class Essay extends Component {
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
                     {loading ? <Loader /> :
-                        <Box display="flex" flexDirection="row" justifyContent="center">
-                            <Box margin={3} className={classes.form}>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12} sm={12} lg={8} spacing={1}>
+                        <Grid container spacing={1}>
+                                  <Grid item xs={10} sm={10} lg={8} spacing={1}>
 
                                         <Box display="flex" flexDirection="row" className={classes.selectContainer}>
                                             <Grid container spacing={2}>
@@ -216,9 +214,10 @@ class Essay extends Component {
                                             </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })} disabled={!(task && type && question)}>Start Timer</Button></div>}
                                         <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                                     </Grid>
-                                </Grid>
-                            </Box>
-                        </Box>
+
+                                
+                            
+                        </Grid>
                     }
 
                 </Paper>
