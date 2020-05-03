@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { getData } from '../Utils/Api'
 import Tooltip from '@material-ui/core/Tooltip';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Typography, makeStyles } from '@material-ui/core/'
+import { Typography } from '@material-ui/core/'
+import { makeStyles } from '@material-ui/core/styles';
 
 
+
+const useStyles = makeStyles({
+    iconSize: {
+        fontSize: 80
+    }
+});
 
 function User() {
+    const classes = useStyles();
 
     const [user, userChange] = useState([])
 
@@ -28,9 +36,8 @@ function User() {
     return (
 
         <React.Fragment>
-            <Tooltip title={user} aria-label="logout" arrow>
-                <AccountCircleIcon />
-            </Tooltip>
+            <AccountCircleIcon className={classes.iconSize} />
+            <Typography>{user}</Typography>
         </React.Fragment >
     )
 
