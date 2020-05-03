@@ -210,7 +210,7 @@ class MyEssay extends Component {
                                 </Typography>
                                     <Paper elevation={3} className={classes.reviewWrapper}>
                                         {review.map((row, index) => <Fragment key={index}>
-                                            <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
+                                            <ReviewRow label={row.label} value={`${row.value.toFixed(1)}/9`} classes={classes} />
                                             <Divider />
                                         </Fragment>)}
                                     </Paper>

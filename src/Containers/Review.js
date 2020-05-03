@@ -134,17 +134,14 @@ class Review extends Component {
         })
 
     }
-    handleValueChange = (id, value) => {
-        if (id === 'comment') {
-            this.setState({ [id]: value })
-        }
-        else {
-            this.setState({
-                sliders: {
-                    ...this.state.sliders, [id]: value
-                }
-            })
-        }
+    handleValueChange = (label, value) => {
+
+        this.setState({
+            sliders: {
+                ...this.state.sliders, [label]: value
+            }
+        })
+
 
 
     }
