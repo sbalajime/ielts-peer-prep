@@ -171,7 +171,7 @@ class MyEssay extends Component {
                 }
 
             } else {
-                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' })
             }
         })
 
