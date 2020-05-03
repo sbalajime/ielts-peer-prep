@@ -165,7 +165,7 @@ class Essay extends Component {
                 <Paper elevation={3} className={classes.card}>
                     {loading ? <Loader /> :
                         <Grid container justify="center" spacing={1}>
-                            <Grid item xs={10} sm={10} lg={8} spacing={1}>
+                            <Grid item xs={10} sm={10} lg={8} spacing={1} className={classes.form}>
 
                                 <Box display="flex" flexDirection="row" className={classes.selectContainer}>
                                     <Grid container spacing={2}>

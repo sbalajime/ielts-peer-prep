@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getData } from '../Utils/Api'
-
+import Tooltip from '@material-ui/core/Tooltip';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Typography, makeStyles } from '@material-ui/core/'
 
@@ -28,8 +28,9 @@ function User() {
     return (
 
         <React.Fragment>
-            <AccountCircleIcon />
-            <Typography >{user}</Typography>
+            <Tooltip title={user} aria-label="logout" arrow>
+                <AccountCircleIcon />
+            </Tooltip>
         </React.Fragment >
     )
 
