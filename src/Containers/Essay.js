@@ -13,6 +13,7 @@ import CONSTANTS from '../constants';
 import { postData } from '../Utils/Api'
 import SnackBar from '../Components/SnackBar';
 import Loader from '../Components/Loader';
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = (theme) => ({
     root: {
@@ -162,47 +163,63 @@ class Essay extends Component {
             <Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
                 <AppBarComponent />
                 <Paper elevation={3} className={classes.card}>
-                    {loading ? <Loader /> : <Box display="flex" flexDirection="row" justifyContent="center">
-                        <Box margin={3} className={classes.form}>
-                            <Box display="flex" flexDirection="row" className={classes.selectContainer}>
-                                <Dropdown name={"task"} value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
-                                <Dropdown name={"type"} value={type} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Academic', value: 'Academic' }, { label: 'General', value: 'General' }]} label="Select Type" />
+                    {loading ? <Loader /> :
+                        <Box display="flex" flexDirection="row" justifyContent="center">
+                            <Box margin={3} className={classes.form}>
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12} sm={12} lg={8} spacing={1}>
+
+                                        <Box display="flex" flexDirection="row" className={classes.selectContainer}>
+                                            <Grid container spacing={2}>
+
+                                                <Grid item xs={12} sm={12} lg={6} spacing={1} >
+                                                    <Dropdown name={"task"} value={task} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Task 1', value: 'task_1' }, { label: 'Task 2', value: 'task_2' }]} label="Select Task" />
+                                                </Grid>
+                                                <Grid item xs={12} sm={12} lg={6} spacing={1}>
+                                                    <Dropdown name={"type"} value={type} handleSelectChange={this.handleSelectChange} className={classes.taskSelector} options={[{ label: 'Academic', value: 'Academic' }, { label: 'General', value: 'General' }]} label="Select Type" />
+                                                </Grid>
+                                            </Grid>
+
+                                        </Box>
+                                        <TextField
+                                            id="outlined-multiline-static"
+                                            label="Question"
+                                            multiline
+                                            rows={5}
+                                            value={this.state.question}
+                                            onChange={(e) => this.handleChange('question', e.target.value)}
+                                            variant="outlined"
+                                            fullWidth={true}
+                                            inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                            margin="normal"
+                                        />
+                                        {startTimer ?
+                                            <div>
+
+                                                <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
+                                                    <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
+                                                    <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
+                                                </Box>
+                                                <TextField
+                                                    id="outlined-multiline-static"
+                                                    label="Answer"
+                                                    multiline
+                                                    rows={20}
+                                                    value={this.state.answer}
+                                                    onChange={(e) => this.handleChange('answer', e.target.value)}
+                                                    variant="outlined"
+                                                    fullWidth={true}
+                                                    inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
+                                                    margin="normal"
+                                                />
+                                                <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
+                                            </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })} disabled={!(task && type && question)}>Start Timer</Button></div>}
+                                        <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
+                                    </Grid>
+                                </Grid>
                             </Box>
-                            <TextField
-                                id="outlined-multiline-static"
-                                label="Question"
-                                multiline
-                                rows={5}
-                                value={this.state.question}
-                                onChange={(e) => this.handleChange('question', e.target.value)}
-                                variant="outlined"
-                                fullWidth={true}
-                                inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                                margin="normal"
-                            />
-                            {startTimer ?
-                                <div>
-                                    <Box display="flex" flexDirection="row" justifyContent="flex-end" className={classes.root}>
-                                        <Chip label={`Minimum Words: ${currentWords}/${minimumWords}`} color="primary" />
-                                        <Chip label={`${timer.minutes}:${timer.seconds}`} color="primary" icon={<TimerOutlinedIcon />} />
-                                    </Box>
-                                    <TextField
-                                        id="outlined-multiline-static"
-                                        label="Answer"
-                                        multiline
-                                        rows={20}
-                                        value={this.state.answer}
-                                        onChange={(e) => this.handleChange('answer', e.target.value)}
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        inputProps={{ "data-gramm_editor": false, "data-gramm": false, spellCheck: false }}
-                                        margin="normal"
-                                    />
-                                    <div style={{ textAlign: 'right' }}><Button onClick={this.handleClick} variant="contained" color="primary" size="large">Submit</Button></div>
-                                </div> : <div style={{ textAlign: 'center' }}><Button variant="contained" color="primary" size="large" onClick={() => this.setState({ startTimer: true })} disabled={!(task && type && question)}>Start Timer</Button></div>}
-                            <SnackBar open={showSnackBar} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                         </Box>
-                    </Box>}
+                    }
 
                 </Paper>
                 <FooterComponent />
