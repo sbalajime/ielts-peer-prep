@@ -117,6 +117,7 @@ class Review extends Component {
                     this.props.history.push('/')
                 else {
                     const { answer, question, task } = res.rows[0];
+
                     this.setState({
                         question,
                         answer,
@@ -124,6 +125,10 @@ class Review extends Component {
                     })
                 }
 
+            } else if (res.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: res.msg, snackBarType: 'error' });
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
             }
         })
 

@@ -134,8 +134,10 @@ class MyEssay extends Component {
         this.setState({ loading: false }, () => {
             if (resp.status == 'success') {
                 this.setState({ essay: resp.rows[0] })
+            } else if (resp.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
             } else {
-                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'danger' })
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
             }
         })
     }

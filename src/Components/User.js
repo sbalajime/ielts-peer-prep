@@ -7,11 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     iconSize: {
-        fontSize: 80
+        fontSize: 80, color: theme.palette.primary.main
     }
-});
+}));
 
 function User() {
     const classes = useStyles();
@@ -19,7 +19,7 @@ function User() {
     const [user, userChange] = useState([])
 
     const processUser = (res) => {
-        if (res.status = "sucess") {
+        if (res && res.status == "sucess") {
             userChange([res.rows[0].full_name])
         }
     }

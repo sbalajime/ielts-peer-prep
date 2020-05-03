@@ -7,7 +7,8 @@ import FooterComponent from '../Components/Footer';
 import Loader from '../Components/Loader';
 import Dropdown from '../Components/Dropdown'
 import EssayCard from '../Components/EssayCard';
-import EditIcon from '@material-ui/icons/Edit'
+import EditIcon from '@material-ui/icons/Edit';
+import SnackBar from '../Components/SnackBar';
 
 import { getData } from '../Utils/Api';
 
@@ -85,7 +86,7 @@ class Dashboard extends Component {
         this.state = {
             essays: [], loading: false,
             filterEssays: [],
-            submit: "all"
+            submit: "all", showSnackBar: false, snackBarMsg: '', snackBarType: ''
         }
     }
     componentDidMount() {
@@ -97,6 +98,10 @@ class Dashboard extends Component {
         this.setState({ loading: false }, () => {
             if (res.status === 'success') {
                 this.setState({ essays: res.rows, filterEssays: res.rows })
+            } else if (res.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: res.msg, snackBarType: 'error' });
+            } else {
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
             }
         })
     }
@@ -120,12 +125,19 @@ class Dashboard extends Component {
             })
     }
 
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ apiError: false, apiErrMessage: '', showSnackBar: false });
+    }
+
 
 
 
     render() {
         const { classes } = this.props;
-        const { filterEssays, submit, loading } = this.state;
+        const { filterEssays, submit, loading, showSnackBar, snackBarMsg, snackBarType } = this.state;
         return (
             <Box bgcolor="primary.main" display="flex" minHeight="100vh" flexDirection="column">
                 <AppBarComponent />
@@ -138,6 +150,7 @@ class Dashboard extends Component {
                         {filterEssays.map((essay, index) => <EssayCard key={index} {...essay} />)}
                     </Box>}
                 </Paper>
+                <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                 <FooterComponent />
             </Box >)
     }

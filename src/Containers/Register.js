@@ -51,7 +51,7 @@ class Signup extends React.Component {
         if (reason === 'clickaway') {
             return;
         }
-        this.setState({ apiError: false, apiErrMessage: '' });
+        this.setState({ showSnackBar: false });
     }
 
     handleSignupResp = (resp) => {
@@ -63,8 +63,10 @@ class Signup extends React.Component {
                     this.setState({ email: "", password: "" });
                     this.props.history.push('/')
                 }
+            } else if (resp.status == 'failed') {
+                this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
             } else {
-                this.setState({ apiError: true, apiErrMessage: resp.msg })
+                this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
             }
         })
     }
@@ -97,7 +99,7 @@ class Signup extends React.Component {
 
     render() {
 
-        const { email, password, rpass, apiErrMessage, apiError, fullName, error: { email: errEmail, password: errPassword, rpass: errRpass, fullName: errFullName }, loading } = this.state;
+        const { email, password, rpass, showSnackBar, snackBarMsg, snackBarType, fullName, error: { email: errEmail, password: errPassword, rpass: errRpass, fullName: errFullName }, loading } = this.state;
         const { classes } = this.props;
 
         return (
@@ -132,7 +134,7 @@ class Signup extends React.Component {
                         </Box>
                     </Grid>
                 </Grid>
-                <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
+                <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
             </Box >
         )
     }
