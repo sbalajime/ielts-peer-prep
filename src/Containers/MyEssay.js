@@ -115,7 +115,7 @@ class MyEssay extends Component {
             showSnackBar: false,
             snackBarType: "",
             snackBarMsg: "",
-            words: "", comments: []
+            words: "", comments: [], noReview: false
         }
     }
 
@@ -140,12 +140,19 @@ class MyEssay extends Component {
         })
     }
 
+    handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ showSnackBar: false });
+    }
+
     handleReviewResp = (resp) => {
         this.setState({ loading: false }, () => {
             if (resp.status == 'success') {
                 console.log(resp.rows)
                 if (typeof (resp.rows) == 'undefined' || typeof (resp.rows.reviews) == 'undefined' || resp.rows.reviews == null) {
-                    this.props.history.push(`/`)
+                    this.setState({ noReview: true })
                 }
                 else {
                     let bandDescriptors = [
@@ -176,7 +183,7 @@ class MyEssay extends Component {
 
     render() {
         const { classes } = this.props;
-        const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading, comments } = this.state;
+        const { review, essay, showSnackBar, snackBarType, snackBarMsg, loading, comments, noReview } = this.state;
 
 
         return (<Box bgcolor="primary.main" display="flex" flex="1" minHeight="100vh" flexDirection="column" >
@@ -196,21 +203,24 @@ class MyEssay extends Component {
                             </Box></Box>
                         </Grid>
                         <Grid item lg={6} sm={12} xs={12} >
-                            <Box height="100%" classes={classes.reviewSection} >
-                                <Typography variant="h5" component="h5" gutterBottom className={classes.bandHeader}>
-                                    Band Descriptors
+                            {noReview ? <Typography variant="h5" component="h5" gutterBottom className={classes.bandHeader}>
+                                Others Haven't reviewed your answer yet.
+                                </Typography> : <Box height="100%" classes={classes.reviewSection} >
+                                    <Typography variant="h5" component="h5" gutterBottom className={classes.bandHeader}>
+                                        Band Descriptors
                                 </Typography>
-                                <Paper elevation={3} className={classes.reviewWrapper}>
-                                    {review.map((row, index) => <Fragment key={index}>
-                                        <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
-                                        <Divider />
-                                    </Fragment>)}
-                                </Paper>
-                                <Typography variant="h5" component="h5" gutterBottom >
-                                    Comments
+                                    <Paper elevation={3} className={classes.reviewWrapper}>
+                                        {review.map((row, index) => <Fragment key={index}>
+                                            <ReviewRow label={row.label} value={`${row.value}/9`} classes={classes} />
+                                            <Divider />
+                                        </Fragment>)}
+                                    </Paper>
+                                    <Typography variant="h5" component="h5" gutterBottom >
+                                        Comments
                                 </Typography>
-                                {comments.map((row, i) => <Comment key={i} value={row.comment} fullName={row.user_name} />)}
-                            </Box>
+                                    {comments.map((row, i) => <Comment key={i} value={row.comment} fullName={row.user_name} />)}
+                                </Box>}
+
                         </Grid>
                     </Grid>}
                 </Box>

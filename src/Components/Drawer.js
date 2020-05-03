@@ -50,10 +50,6 @@ export default function TemporaryDrawer(props) {
             label: 'Write',
             icon: <NotesIcon />,
             route: '/write'
-        }, {
-            label: 'Review',
-            icon: <HomeIcon />,
-            route: '/review'
         }];
         const { history } = props;
         return (

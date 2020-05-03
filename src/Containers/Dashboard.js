@@ -59,7 +59,7 @@ const useStyles = (theme) => ({
     label: {
         color: '#000',
         marginBottom: theme.spacing(.5),
-        marginLeft: '-5px'
+        marginLeft: '-5px', width: 100
     },
     cardContainer: {
         display: 'flex',

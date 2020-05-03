@@ -42,7 +42,7 @@ class Login extends React.Component {
 
     constructor() {
         super()
-        this.state = { email: "", password: "", error: {}, apiError: false, apiErrMessage: '' }
+        this.state = { email: "", password: "", error: {}, showSnackBar: false, snackBarMsg: '', snackBarType: '' }
     }
 
     handleChange = (e) => {
@@ -53,13 +53,16 @@ class Login extends React.Component {
     handleLoginResp = (resp) => {
         if (resp.status == 'success') {
             const { data } = resp;
+
             if (data) {
                 localStorage.setItem('token', data);
                 this.setState({ email: "", password: "" });
                 this.props.history.push('/')
             }
+        } else if (resp.status == 'failed') {
+            this.setState({ showSnackBar: true, snackBarMsg: resp.msg, snackBarType: 'error' });
         } else {
-            this.setState({ apiError: true, apiErrMessage: resp.msg })
+            this.setState({ showSnackBar: true, snackBarMsg: 'Issue with server!', snackBarType: 'error' });
         }
 
     }
@@ -68,7 +71,7 @@ class Login extends React.Component {
         if (reason === 'clickaway') {
             return;
         }
-        this.setState({ apiError: false, apiErrMessage: '' });
+        this.setState({ apiError: false, apiErrMessage: '', showSnackBar: false });
     }
 
     handleClick = () => {
@@ -87,7 +90,7 @@ class Login extends React.Component {
 
     render() {
 
-        const { email, password, error: { email: emailError, password: passError }, apiError, apiErrMessage } = this.state;
+        const { email, password, error: { email: emailError, password: passError }, showSnackBar, snackBarMsg, snackBarType } = this.state;
         const { classes } = this.props;
         return (
             <Box display="flex">
@@ -114,7 +117,7 @@ class Login extends React.Component {
                                             Create a new account
                                         </Typography>
                                     </Link>
-                                    <SnackBar open={apiError} type="error" message={apiErrMessage} handleClose={this.handleSnackBarClose} />
+                                    <SnackBar open={showSnackBar} autoHideDuration={5000} type={snackBarType} message={snackBarMsg} handleClose={this.handleSnackBarClose} />
                                 </Box>
                             </Paper>
                         </Box>

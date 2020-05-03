@@ -129,7 +129,7 @@ class Essay extends Component {
         if (reason === 'clickaway') {
             return;
         }
-        this.setState({ apiError: false, apiErrMessage: '' });
+        this.setState({ apiError: false, apiErrMessage: '', showSnackBar: false });
     }
 
     handleClick = () => {
