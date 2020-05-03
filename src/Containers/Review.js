@@ -216,7 +216,7 @@ class Review extends Component {
                                     <Typography variant="h5" component="h2" gutterBottom>
                                         Answer
                                     </Typography>
-                                    <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                    <Typography component="p" gutterBottom className={classes.answer}>
                                         {answer}
                                     </Typography>
                                 </CardContent>

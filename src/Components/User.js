@@ -19,7 +19,7 @@ function User() {
     const [user, userChange] = useState([])
 
     const processUser = (res) => {
-        if (res && res.status == "sucess") {
+        if (res && (res.status == "success")) {
             userChange([res.rows[0].full_name])
         }
     }

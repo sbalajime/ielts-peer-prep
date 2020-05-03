@@ -199,7 +199,7 @@ class MyEssay extends Component {
                                     {essay.question}
                                 </Typography>
                                 <Chip size="small" label={`Words: ${wordCount(essay.answer)}`} color='primary' />
-                                <Typography variant="body2" component="p" gutterBottom className={classes.answer}>
+                                <Typography component="p" gutterBottom className={classes.answer}>
                                     {essay.answer}
                                 </Typography>
                             </Box></Box>
