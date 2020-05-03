@@ -14,6 +14,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import NotesIcon from '@material-ui/icons/Notes';
+import Box from '@material-ui/core/Box';
+
+import User from '../Components/User';
 
 const useStyles = makeStyles({
     list: {
@@ -61,6 +64,10 @@ export default function TemporaryDrawer(props) {
                 onClick={toggleDrawer(anchor, false)}
                 onKeyDown={toggleDrawer(anchor, false)}
             >
+                <Box display="flex" flexDirection="column" alignItems="center" margin={3}>
+                    <User />
+                </Box>
+
                 <List>
                     {options.map((row, index) => (
                         <ListItem button key={index} onClick={() => history.push(row.route)}>

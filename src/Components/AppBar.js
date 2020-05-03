@@ -40,7 +40,6 @@ const AppBarComponent = () => {
             <Typography variant="h6" className={classes.title}>
                 IELTS Peer Prep
             </Typography>
-            <User />
             <Tooltip title="Logout" aria-label="logout" arrow><Button color="inherit" onClick={handleLogout}><ExitToAppIcon fontSize="large" /></Button></Tooltip>
 
         </Toolbar>
