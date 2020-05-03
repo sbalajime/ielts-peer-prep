@@ -164,10 +164,7 @@ class MyEssay extends Component {
                         'Grammatical Range and Accuracy'
                     ];
                     let respReviews = resp.rows.reviews;
-                    let sortedReviews = [];
-                    bandDescriptors.map(key => {
-                        sortedReviews.push({ label: key, value: respReviews.filter(row => row.label = key)[0].value })
-                    })
+                    let sortedReviews = respReviews.sort((a, b) => bandDescriptors.indexOf(a.label) - bandDescriptors.indexOf(b.label))
                     this.setState({
                         review: sortedReviews, comments: resp.rows.comments_arr
                     })
